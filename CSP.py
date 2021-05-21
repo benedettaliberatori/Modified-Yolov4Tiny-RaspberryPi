@@ -46,11 +46,11 @@ class CSPBlock(nn.Module):
 class ResBlockD(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels,out_channels,1)
-        self.conv2 = nn.Conv2d(out_channels,out_channels,3,stride =2)
-        self.conv3 = nn.Conv2d(out_channels,in_channels,1)
-        self.conv4 = nn.Conv2d(in_channels,in_channels,1)
-        self.avgpool = nn.AvgPool2d(2,stride = 2)
+        self.conv1 = nn.Conv2d(in_channels,out_channels,1,stride = 1)
+        self.conv2 = nn.Conv2d(out_channels,out_channels,3,stride =2,padding=1)
+        self.conv3 = nn.Conv2d(out_channels,in_channels,1,stride =1)
+        self.conv4 = nn.Conv2d(in_channels,in_channels,1,stride =1)
+        self.avgpool = nn.AvgPool2d(2,2)
 
     def forward(self,x):
         x_a = self.conv1(x)
@@ -58,6 +58,7 @@ class ResBlockD(nn.Module):
         x_a = self.conv2(x_a)
         x_a = self.conv3(x_a)
         x_b = self.conv4(x_b)
+
         out = torch.cat([x_a,x_b],dim=1)
 
         return out
