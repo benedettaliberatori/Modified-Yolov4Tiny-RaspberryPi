@@ -12,16 +12,19 @@ class backbone(nn.Module):
         self.auxiliary1 = AuxiliaryResBlock(128)
         self.auxiliary2 = AuxiliaryResBlock(256)
         self.resblock2 = ResBlockD(128,256)
-        self.csp = CSPBlock(256,512)
+        self.csp = CSPBlock(256,256)
         self.conv3 = ConvBlock(512,512,3,1)
+        self.convaux = ConvBlock(128,256,3,2)
 
     def forward(self,x):
         x = self.resblock1(self.conv2(self.conv1(x)))
         out = self.auxiliary1(x)
         x = self.resblock2(x+out)
         feat = x
+        out = self.convaux(out)
         out = self.auxiliary2(out)
-        x = self.conv3(self.csp(out+x))
+        x = self.csp(x+out)
+        x = self.conv3(x)
 
         return feat , x 
 

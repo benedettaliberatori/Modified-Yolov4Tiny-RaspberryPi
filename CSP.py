@@ -28,8 +28,6 @@ class CSPBlock(nn.Module):
     def forward(self, x):
         x = self.conv1(x)
         feat = x
-        c = self.out_channels
-        #x = torch.split(x, c // 2, dim=1)[1]
         x = self.conv2(x)
         feat1 = x
         x = self.conv3(x)
@@ -66,6 +64,7 @@ class ResBlockD(nn.Module):
 class ChannelAttention(nn.Module):
     def __init__(self, in_channels, ratio=16):
         super().__init__()
+        self.in_channels = in_channels
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.max_pool = nn.AdaptiveMaxPool2d(1)
            
@@ -76,15 +75,15 @@ class ChannelAttention(nn.Module):
 
     def forward(self, x):
         avg = self.avg_pool(x)
-        avg = avg.view(-1,1*1*32)
+        avg = avg.view(-1,1*1*self.in_channels)
 
         avg_out = self.fc(avg)
         max = self.max_pool(x)
-        max = avg.view(-1,1*1*32)
+        max = avg.view(-1,1*1*self.in_channels)
         
         max_out = self.fc(max)
-        avg_out = avg_out.view(1,32,1,1)
-        max_out = avg_out.view(1,32,1,1)
+        avg_out = avg_out.view(1,self.in_channels,1,1)
+        max_out = avg_out.view(1,self.in_channels,1,1)
         out = avg_out + max_out
         return self.sigmoid(out)
     
@@ -107,10 +106,10 @@ class SpatialAttention(nn.Module):
 class AuxiliaryResBlock(nn.Module):
     def __init__(self,in_channels):
         super().__init__()
-        self.out_channels = in_channels//2
-        self.conv1 = nn.Conv2d(in_channels,self.out_channels,3,padding=1)
-        self.conv2 = nn.Conv2d(self.out_channels,self.out_channels,3,padding=1)
-        self.channel_attention = ChannelAttention(self.out_channels)
+        out_channels = in_channels//2
+        self.conv1 = nn.Conv2d(in_channels,out_channels,3,padding=1)
+        self.conv2 = nn.Conv2d(out_channels,out_channels,3,padding=1)
+        self.channel_attention = ChannelAttention(out_channels)
         self.spatial_attention = SpatialAttention()
         
     def forward(self,x):
@@ -129,15 +128,15 @@ class AuxiliaryResBlock(nn.Module):
 
 
 if __name__ == '__main__':
-    x = torch.rand(1,64,104,104)
+    x = torch.rand(1,128,104,104)
     #model = ResBlockD(64,32)
     #print(model(x).shape)
     
-    model2 = AuxiliaryResBlock(64)
-    print(model2(x).shape)
+    #model2 = ResBlockD(64,128)
+    #print(model2(x).shape)
     
-    #model3 = AuxiliaryResBlock(64, 32)
-    #print(model3(x).shape)
+    model3 = AuxiliaryResBlock(128)
+    print(model3(x).shape)
 
 
 
