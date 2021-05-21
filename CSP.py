@@ -75,21 +75,17 @@ class ChannelAttention(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        y = self.avg_pool(x)
-        print(y.shape)
-        y = torch.reshape(y, (-1,))
-        print(y.shape)
-        #avg_out = self.fc(self.avg_pool(x))
-        avg_out = self.fc(y)
-        y = self.max_pool(x)
-        print(y.shape)
-        y = torch.reshape(y, (-1,))
-        print(y.shape)
-        #max_out = self.fc(self.max_pool(x))
-        max_out = self.fc(y)
+        avg = self.avg_pool(x)
+        avg = avg.view(-1,1*1*32)
+
+        avg_out = self.fc(avg)
+        max = self.max_pool(x)
+        max = avg.view(-1,1*1*32)
+        
+        max_out = self.fc(max)
+        avg_out = avg_out.view(1,32,1,1)
+        max_out = avg_out.view(1,32,1,1)
         out = avg_out + max_out
-        print("out has size: ", out.shape)
-        out = torch.reshape(out, (1,64,1,1))
         return self.sigmoid(out)
     
 
@@ -112,8 +108,8 @@ class AuxiliaryResBlock(nn.Module):
     def __init__(self,in_channels,out_channels):
         super().__init__()
 
-        self.conv1 = nn.Conv2d(in_channels,out_channels,3)
-        self.conv2 = nn.Conv2d(out_channels,out_channels,3)
+        self.conv1 = nn.Conv2d(in_channels,out_channels,3,padding=1)
+        self.conv2 = nn.Conv2d(out_channels,out_channels,3,padding=1)
         self.channel_attention = ChannelAttention(out_channels)
         self.spatial_attention = SpatialAttention()
         
@@ -137,7 +133,7 @@ if __name__ == '__main__':
     #model = ResBlockD(64,32)
     #print(model(x).shape)
     
-    model2 = ChannelAttention(64)
+    model2 = AuxiliaryResBlock(64,32)
     print(model2(x).shape)
     
     #model3 = AuxiliaryResBlock(64, 32)
