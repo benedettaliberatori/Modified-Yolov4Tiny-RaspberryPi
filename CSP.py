@@ -69,15 +69,27 @@ class ChannelAttention(nn.Module):
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.max_pool = nn.AdaptiveMaxPool2d(1)
            
-        self.fc = nn.Sequential(nn.Linear(in_channels, in_channels // ratio, 1, bias=False),
+        self.fc = nn.Sequential(nn.Linear(in_channels, in_channels // ratio, bias=False),
                                nn.ReLU(),
-                               nn.Linear(in_channels // ratio, in_channels, 1, bias=False))
+                               nn.Linear(in_channels // ratio, in_channels, bias=False))
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        avg_out = self.fc(self.avg_pool(x))
-        max_out = self.fc(self.max_pool(x))
+        y = self.avg_pool(x)
+        print(y.shape)
+        y = torch.reshape(y, (-1,))
+        print(y.shape)
+        #avg_out = self.fc(self.avg_pool(x))
+        avg_out = self.fc(y)
+        y = self.max_pool(x)
+        print(y.shape)
+        y = torch.reshape(y, (-1,))
+        print(y.shape)
+        #max_out = self.fc(self.max_pool(x))
+        max_out = self.fc(y)
         out = avg_out + max_out
+        print("out has size: ", out.shape)
+        out = torch.reshape(out, (1,64,1,1))
         return self.sigmoid(out)
     
 
@@ -122,10 +134,14 @@ class AuxiliaryResBlock(nn.Module):
 
 if __name__ == '__main__':
     x = torch.rand(1,64,104,104)
-
-    model = ResBlockD(64,32)
-     
-    print(model(x).shape)
+    #model = ResBlockD(64,32)
+    #print(model(x).shape)
+    
+    model2 = ChannelAttention(64)
+    print(model2(x).shape)
+    
+    #model3 = AuxiliaryResBlock(64, 32)
+    #print(model3(x).shape)
 
 
 
