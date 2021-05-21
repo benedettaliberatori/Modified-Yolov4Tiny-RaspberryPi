@@ -37,9 +37,9 @@ class CSPBlock(nn.Module):
         x = self.conv4(x)
         feat1 = x
         x = torch.cat([feat, x], dim=1)
-        #feat2 = self.maxpool(x)
+        feat2 = self.maxpool(x)
 
-        return x
+        return feat2
 
 
 
@@ -105,12 +105,12 @@ class SpatialAttention(nn.Module):
 
 
 class AuxiliaryResBlock(nn.Module):
-    def __init__(self,in_channels,out_channels):
+    def __init__(self,in_channels):
         super().__init__()
-
-        self.conv1 = nn.Conv2d(in_channels,out_channels,3,padding=1)
-        self.conv2 = nn.Conv2d(out_channels,out_channels,3,padding=1)
-        self.channel_attention = ChannelAttention(out_channels)
+        self.out_channels = in_channels//2
+        self.conv1 = nn.Conv2d(in_channels,self.out_channels,3,padding=1)
+        self.conv2 = nn.Conv2d(self.out_channels,self.out_channels,3,padding=1)
+        self.channel_attention = ChannelAttention(self.out_channels)
         self.spatial_attention = SpatialAttention()
         
     def forward(self,x):
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     #model = ResBlockD(64,32)
     #print(model(x).shape)
     
-    model2 = AuxiliaryResBlock(64,32)
+    model2 = AuxiliaryResBlock(64)
     print(model2(x).shape)
     
     #model3 = AuxiliaryResBlock(64, 32)
