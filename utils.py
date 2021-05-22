@@ -106,23 +106,9 @@ def get_data(train_csv_path, test_csv_path):
  
     )
 
-    train_eval_dataset = YOLODataset(
-        train_csv_path,
-        transform=transforms,
-        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16],
-        img_dir=IMG_DIR,
-        label_dir=LABEL_DIR,
-        anchors=ANCHORS,
-    )
-    train_eval_loader = DataLoader(
-        dataset=train_eval_dataset,
-        batch_size=BATCH_SIZE,
-        num_workers=NUM_WORKERS,
-        shuffle=False,
-        
-    )
+    
 
-    return train_loader, test_loader, train_eval_loader
+    return train_loader, test_loader
 
     
 
