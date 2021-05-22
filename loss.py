@@ -24,7 +24,7 @@ class Loss(nn.Module):
         obj = target[..., 0] == 1  #  Iobj_i
         noobj = target[..., 0] == 0  #  Inoobj_i
 
-        
+
 
         no_object_loss = self.bce(
             (predictions[..., 0:1][noobj]), (target[..., 0:1][noobj]),

@@ -30,7 +30,7 @@ class Yolo(nn.Module):
         feat1 = self.conv4(feat1)
         feat2 = self.conv5(feat2)
 
-        return self.head(feat1),self.head(feat2)
+        return self.head(feat2),self.head(feat1)
 
 
 if __name__ == '__main__':

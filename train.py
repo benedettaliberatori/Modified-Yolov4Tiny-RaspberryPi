@@ -22,6 +22,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
 
 
         out = model(x)
+        print(out[0].shape)
         loss = (
             loss_fn(out[0], y0, scaled_anchors[0])
             + loss_fn(out[1], y1, scaled_anchors[1])
