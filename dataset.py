@@ -9,9 +9,11 @@ import torch
 
 from PIL import Image, ImageFile
 from torch.utils.data import Dataset, DataLoader
-from utils import (
-    iou_width_height as iou
-)
+from utils import iou_width_height 
+
+import albumentations as A
+import cv2
+from albumentations.pytorch import ToTensorV2
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -63,7 +65,7 @@ class YOLODataset(Dataset):
         targets = [torch.zeros((self.num_anchors // 2, S, S, 6))
                    for S in self.S]
         for box in bboxes:
-            iou_anchors = iou(torch.tensor(box[2:4]), self.anchors)
+            iou_anchors = iou_width_height(torch.tensor(box[2:4]), self.anchors)
             anchor_indices = iou_anchors.argsort(descending=True, dim=0)
             x, y, width, height, class_label = box
             has_anchor = [False] * 3  # each scale should have one anchor
@@ -95,6 +97,66 @@ class YOLODataset(Dataset):
 
         return image, tuple(targets)
 
+def get_data(train_csv_path, test_csv_path):
+    
+
+    IMAGE_SIZE = 416
+    BATCH_SIZE = 16 
+    NUM_WORKERS = 4
+    DATASET = 'dataset'
+    IMG_DIR = DATASET + "/images/"
+    LABEL_DIR = DATASET + "/labels/"
+
+    ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
+              [(0.03   ,  0.056   ), (0.01   ,  0.018   ), (0.006   , 0.01    )]]
+
+    
+    transforms = A.Compose(
+    [
+        A.LongestMaxSize(max_size=IMAGE_SIZE),
+        A.PadIfNeeded(
+            min_height=IMAGE_SIZE, min_width=IMAGE_SIZE, border_mode=cv2.BORDER_CONSTANT
+        ),
+        A.Normalize(mean=[0, 0, 0], std=[1, 1, 1], max_pixel_value=255,),
+        ToTensorV2(),
+    ],)
+
+    train_dataset = YOLODataset(
+        train_csv_path,
+        transform=transforms,
+        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16],
+        img_dir=IMG_DIR,
+        label_dir=LABEL_DIR,
+        anchors=ANCHORS,
+    )
+    test_dataset = YOLODataset(
+        test_csv_path,
+        transform=transforms,
+        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16],
+        img_dir=IMG_DIR,
+        label_dir=LABEL_DIR,
+        anchors=ANCHORS,
+    )
+    train_loader = DataLoader(
+        dataset=train_dataset,
+        batch_size=BATCH_SIZE,
+        num_workers=NUM_WORKERS,
+        shuffle=True,
+        
+    )
+    test_loader = DataLoader(
+        dataset=test_dataset,
+        batch_size=BATCH_SIZE,
+        num_workers=NUM_WORKERS,
+        shuffle=False,
+ 
+    )
+
+    
+
+    return train_loader, test_loader
+
+    
 
 if __name__ == '__main__':
 

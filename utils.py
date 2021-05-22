@@ -9,8 +9,6 @@ import torch
 from collections import Counter
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from dataset import YOLODataset
-
 
 
 
@@ -71,7 +69,7 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
     
-def class_accuracy(model, loader, threshold, device):
+def class_accuracy(model, loader, device, threshold=0.5):
     model.eval()
     tot_class_preds, correct_class = 0, 0
     tot_noobj, correct_noobj = 0, 0
@@ -104,67 +102,9 @@ def class_accuracy(model, loader, threshold, device):
     model.train()
 
 
-def get_data(train_csv_path, test_csv_path):
-    
-
-    IMAGE_SIZE = 416
-    BATCH_SIZE = 16 
-    NUM_WORKERS = 4
-    DATASET = 'dataset'
-    IMG_DIR = DATASET + "/images/"
-    LABEL_DIR = DATASET + "/labels/"
-
-    ANCHORS =  [[(0.275 ,   0.320312), (0.068    0.113281), (0.017  ,  0.03   )], 
-              [(0.03     0.056   ), (0.01     0.018   ), (0.006    0.01    )]]
-
-    
-    transforms = A.Compose(
-    [
-        A.LongestMaxSize(max_size=IMAGE_SIZE),
-        A.PadIfNeeded(
-            min_height=IMAGE_SIZE, min_width=IMAGE_SIZE, border_mode=cv2.BORDER_CONSTANT
-        ),
-        A.Normalize(mean=[0, 0, 0], std=[1, 1, 1], max_pixel_value=255,),
-        ToTensorV2(),
-    ],)
-
-    train_dataset = YOLODataset(
-        train_csv_path,
-        transform=transforms,
-        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16],
-        img_dir=IMG_DIR,
-        label_dir=LABEL_DIR,
-        anchors=ANCHORS,
-    )
-    test_dataset = YOLODataset(
-        test_csv_path,
-        transform=transforms,
-        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16],
-        img_dir=IMG_DIR,
-        label_dir=LABEL_DIR,
-        anchors=ANCHORS,
-    )
-    train_loader = DataLoader(
-        dataset=train_dataset,
-        batch_size=BATCH_SIZE,
-        num_workers=NUM_WORKERS,
-        shuffle=True,
-        
-    )
-    test_loader = DataLoader(
-        dataset=test_dataset,
-        batch_size=BATCH_SIZE,
-        num_workers=NUM_WORKERS,
-        shuffle=False,
- 
-    )
-
-    
-
-    return train_loader, test_loader
-
-    
 
 
 
+def use_gpu_if_possible():
+    return "cuda:0" if torch.cuda.is_available() else "cpu"
         
