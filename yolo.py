@@ -32,10 +32,6 @@ class Yolo(nn.Module):
 
         return self.head(feat1),self.head(feat2)
 
-def IoU():
-    
-def loss(prediction,ground_truth):
-    pass
 
 if __name__ == '__main__':
     
