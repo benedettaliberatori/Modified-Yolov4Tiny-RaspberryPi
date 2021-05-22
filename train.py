@@ -14,10 +14,9 @@ def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     losses = []
     for batch_idx, (x, y) in enumerate(loop):
         x = x.to(cpu)
-        y0, y1, y2 = (
+        y0, y1= (
             y[0].to(cpu),
             y[1].to(cpu),
-            y[2].to(cpu),
         )
 
 
@@ -25,7 +24,6 @@ def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
         loss = (
             loss_fn(out[0], y0, scaled_anchors[0])
             + loss_fn(out[1], y1, scaled_anchors[1])
-            + loss_fn(out[2], y2, scaled_anchors[2])
         )
 
         losses.append(loss.item())
