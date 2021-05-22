@@ -10,10 +10,10 @@ import warnings
 warnings.filterwarnings("ignore")
 
 def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,loss_meter, performance_meter, performance):
-    loop = tqdm(train_loader, leave=True)
+
     losses = []
     for x, y in train_loader:
-        print(x.shape)
+
         x = x.to(device)
         y0, y1= (
             y[0].to(device),
@@ -22,7 +22,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
 
 
         out = model(x)
-        print(out[0].shape)
+
         loss = (
             loss_fn(out[0], y0, scaled_anchors[0])
             + loss_fn(out[1], y1, scaled_anchors[1])
@@ -33,8 +33,10 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
 
         acc = performance(model, train_loader,device)
         # 7. update the loss and accuracy AverageMeter
-        loss_meter.update(val=loss.item(), n=X.shape[0])
-        performance_meter.update(val=acc, n=X.shape[0])
+        loss_meter.update(val=loss.item(), n=x.shape[0])
+
+        performance_meter.update(val=acc, n=x.shape[0])
+
       
 
 
@@ -59,6 +61,7 @@ def train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,device, 
 
         train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,loss_meter, performance_meter, performance)
 
+
         print(f"Epoch {epoch+1} completed. Loss - total: {loss_meter.sum:.4f} - average: {loss_meter.avg:.4f}; Performance: {performance_meter.avg:.4f}")
 
         
@@ -71,7 +74,7 @@ def train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,device, 
 if __name__ == "__main__":
 
     num_anchor = 6
-    model = Yolo(3,num_anchor,2)
+    model = Yolo(3,num_anchor//2,2)
     optimizer = optim.Adam(
         model.parameters(), lr=0.01, weight_decay=0.03
     )
