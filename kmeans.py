@@ -10,14 +10,14 @@ def iou(box, clusters):
     """
     x = np.minimum(clusters[:, 0], box[0])
     y = np.minimum(clusters[:, 1], box[1])
-    if np.count_nonzero(x == 0) > 0 or np.count_nonzero(y == 0) > 0:
-        raise ValueError("Box has no area")
+    #if np.count_nonzero(x == 0) > 0 or np.count_nonzero(y == 0) > 0:
+    #    raise ValueError("Box has no area")
 
     intersection = x * y
     box_area = box[0] * box[1]
     cluster_area = clusters[:, 0] * clusters[:, 1]
 
-    iou_ = intersection / (box_area + cluster_area - intersection)
+    iou_ = intersection / (box_area + cluster_area - intersection + 1e-6)
 
     return iou_
 
@@ -101,7 +101,7 @@ def load_dataset(csv_file,labels):
 if __name__ == '__main__':
 
     data = load_dataset('target.csv', 'labels')
-    out = kmeans(data, k=9)
+    out = kmeans(data, k=6)
     print("Accuracy: {:.2f}%".format(avg_iou(data, out) * 100))
     print("Boxes:\n {}".format(out))
 
