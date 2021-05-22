@@ -28,10 +28,7 @@ class backbone(nn.Module):
 
         return feat , x 
 
-def IoU():
-    
-def loss(prediction,ground_truth):
-    pass
+
 
 
 if __name__ == '__main__':
