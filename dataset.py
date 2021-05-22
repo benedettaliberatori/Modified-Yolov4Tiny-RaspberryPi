@@ -24,8 +24,8 @@ class YOLODataset(Dataset):
         label_dir,
         anchors,
         image_size=416,
-        S=[13, 26, 52],
-        C=20,
+        S=[13, 26],
+        C=2,
         transform=None,
     ):
         self.annotations = pd.read_csv(csv_file)
@@ -35,9 +35,9 @@ class YOLODataset(Dataset):
         self.transform = transform
         self.S = S
         self.anchors = torch.tensor(
-            anchors[0] + anchors[1] + anchors[2])  # for all 3 scales
+            anchors[0] + anchors[1])  # for all 2 scales
         self.num_anchors = self.anchors.shape[0]
-        self.num_anchors_per_scale = self.num_anchors // 3
+        self.num_anchors_per_scale = self.num_anchors // 2
         self.C = C
         self.ignore_iou_thresh = 0.5
 
@@ -60,7 +60,7 @@ class YOLODataset(Dataset):
 
         # Building the targets below:
         # Below assumes 3 scale predictions (as paper) and same num of anchors per scale
-        targets = [torch.zeros((self.num_anchors // 3, S, S, 6))
+        targets = [torch.zeros((self.num_anchors // 2, S, S, 6))
                    for S in self.S]
         for box in bboxes:
             iou_anchors = iou(torch.tensor(box[2:4]), self.anchors)
