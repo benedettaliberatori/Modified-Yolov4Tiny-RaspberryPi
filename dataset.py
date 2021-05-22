@@ -1,7 +1,7 @@
 """
 Creates a Pytorch dataset to load the Pascal VOC & MS COCO datasets
 """
-import config
+
 import numpy as np
 import os
 import pandas as pd
@@ -101,7 +101,7 @@ def get_data(train_csv_path, test_csv_path):
     
 
     IMAGE_SIZE = 416
-    BATCH_SIZE = 16 
+    BATCH_SIZE = 1 
     NUM_WORKERS = 4
     DATASET = 'dataset'
     IMG_DIR = DATASET + "/images/"

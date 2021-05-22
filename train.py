@@ -13,6 +13,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
     loop = tqdm(train_loader, leave=True)
     losses = []
     for x, y in train_loader:
+        print(x.shape)
         x = x.to(device)
         y0, y1= (
             y[0].to(device),
@@ -80,7 +81,7 @@ if __name__ == "__main__":
     ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
               [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
 
-    train_loader, test_loader = get_data('target.csv','target.csv')
+    train_loader, test_loader = get_data('train.csv','test.csv')
 
     scaled_anchors = (
         torch.tensor(ANCHORS)
