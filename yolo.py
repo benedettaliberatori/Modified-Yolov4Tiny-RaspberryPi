@@ -4,9 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 
-class YoloHead(nn.Module):
-    def __init__(self,in_channels):
-        super().__init__()
+
 
 
 class Yolo(nn.Module):
