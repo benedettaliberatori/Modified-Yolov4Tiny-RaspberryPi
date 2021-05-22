@@ -9,7 +9,7 @@ from utils import get_data
 import warnings
 warnings.filterwarnings("ignore")
 
-def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
+def train_fn(train_loader, model, optimizer, loss_fn, scaled_anchors):
     loop = tqdm(train_loader, leave=True)
     losses = []
     for batch_idx, (x, y) in enumerate(loop):
@@ -63,4 +63,4 @@ if __name__ == "__main__":
     
     for epoch in range(num_epochs):
         #plot_couple_examples(model, test_loader, 0.6, 0.5, scaled_anchors)
-        train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors)
+        train_fn(train_loader, model, optimizer, loss_fn, scaled_anchors)
