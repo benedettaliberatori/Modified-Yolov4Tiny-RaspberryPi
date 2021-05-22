@@ -49,7 +49,26 @@ def intersection_over_union(boxes_preds, boxes_labels):
 
     return intersection / (box1_area + box2_area - intersection + 1e-6)
 
-    
+
+
+class AverageMeter(object):
+    '''
+    a generic class to keep track of performance metrics during training or testing of models
+    '''
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.val = 0
+        self.avg = 0
+        self.sum = 0
+        self.count = 0
+
+    def update(self, val, n=1):
+        self.val = val
+        self.sum += val * n
+        self.count += n
+        self.avg = self.sum / self.count
 
 def get_data(train_csv_path, test_csv_path):
     
