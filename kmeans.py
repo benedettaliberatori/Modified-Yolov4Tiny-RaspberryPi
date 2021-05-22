@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+import os
 def iou(box, clusters):
     """
     Calculates the Intersection over Union (IoU) between a box and k clusters.
@@ -81,25 +81,26 @@ def kmeans(boxes, k, dist=np.median):
 
 
 
-def load_dataset(csv_file, labels):
-
-	dataset = []
-	annotations = pd.read_csv(csv_file)
-
+def load_dataset(csv_file,labels):
+    dataset = []
+    annotations = pd.read_csv(csv_file)
+    
     for index in range(len(annotations)):
+
         label_path = os.path.join(labels, annotations.iloc[index, 1])
         bboxes = np.roll(np.loadtxt(fname=label_path, delimiter=" ", ndmin=2), 4, axis=1).tolist()
 
         for box in bboxes:
             _, _, width, height, _ = box 
-
-		dataset.append([height, width])
+            dataset.append([width,height])
 
     return np.array(dataset)
 
 
-if __name__ == "__main__":
-    data = load_dataset("target.csv", "labels")
+
+if __name__ == '__main__':
+
+    data = load_dataset('target.csv', 'labels')
     out = kmeans(data, k=9)
     print("Accuracy: {:.2f}%".format(avg_iou(data, out) * 100))
     print("Boxes:\n {}".format(out))
