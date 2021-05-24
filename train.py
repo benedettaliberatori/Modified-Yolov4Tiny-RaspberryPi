@@ -37,7 +37,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
         optimizer.step()
         
 
-        acc1 , acc2 , acc3 = performance(model, out,y,device)
+        acc1 , acc2 , acc3 = performance(out,y,device)
         # 7. update the loss and accuracy AverageMeter
         loss_meter.update(val=loss.item(), n=x.shape[0])
 
@@ -82,6 +82,47 @@ def train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,device, 
     return loss_meter.sum, performance_meter_class.avg, performance_meter_obj.avg, performance_meter_noobj.avg
 
 
+def test_model(model, dataloader, performance=class_accuracy, loss_fn=None, device=None):
+    # create an AverageMeter for the loss if passed
+    if loss_fn is not None:
+        loss_meter = AverageMeter()
+    
+    if device is None:
+        device = use_gpu_if_possible()
+
+    model = model.to(device)
+
+    performance_meter_class = AverageMeter()
+    performance_meter_obj = AverageMeter()
+    performance_meter_noobj = AverageMeter()
+
+    model.eval()
+    with torch.no_grad():
+        for X, y in dataloader:
+            X = X.to(device)
+            y = y.to(device)
+            y0, y1= (
+            y[0].to(device),
+            y[1].to(device),
+        )
+            y_hat = model(X)
+            loss = (
+            loss_fn(out[0], y0, scaled_anchors[0])
+            + loss_fn(out[1], y1, scaled_anchors[1])
+        )
+        
+            acc1 , acc2 , acc3  =  performance(y_hat,y,device)
+            if loss_fn is not None:
+                loss_meter.update(loss.item(), X.shape[0])
+            performance_meter_class.update(val=acc1, n=x.shape[0])
+            performance_meter_obj.update(val=acc2, n=x.shape[0])
+            performance_meter_noobj.update(val=acc3, n=x.shape[0])
+    # get final performances
+    fin_loss = loss_meter.sum if loss_fn is not None else None
+    fin_perf_class, fin_perf_obj , fin_perf_noobj = performance_meter_class.avg , performance_meter_obj.avg , performance_meter_noobj.avg
+    print(f"TESTING - loss {fin_loss if fin_loss is not None else '--'} - performance_class {fin_perf_class:.4f} , performance_obj {fin_perf_obj:.4f} ,performance_noobj {fin_perf_noobj:.4f}")
+    return fin_loss, fin_perf_class, fin_perf_obj , fin_perf_noobj 
+
 
 
 if __name__ == "__main__":
@@ -103,7 +144,7 @@ if __name__ == "__main__":
     scaled_anchors = (
         torch.tensor(ANCHORS)
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
-    ).to("cuda:0")
+    ).to("cpu")
 
     train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,None, performance=class_accuracy)
 
