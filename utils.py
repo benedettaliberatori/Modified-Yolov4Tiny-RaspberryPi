@@ -69,7 +69,7 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
     
-def class_accuracy(out,y, device, threshold=0.5):
+def class_accuracy(out, model, y, device, threshold=0.5):
     model.eval()
     tot_class_preds, correct_class = 0, 0
     tot_noobj, correct_noobj = 0, 0
