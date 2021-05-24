@@ -37,7 +37,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
         optimizer.step()
         
 
-        acc1 , acc2 , acc3 = performance(out,y,device)
+        acc1 , acc2 , acc3 = performance(out,model, y,device)
         # 7. update the loss and accuracy AverageMeter
         loss_meter.update(val=loss.item(), n=x.shape[0])
 
