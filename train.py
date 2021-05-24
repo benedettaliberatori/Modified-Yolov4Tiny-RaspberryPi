@@ -50,7 +50,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
 
 
 
-def train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,device, performance):
+def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anchors,device, performance):
    
     if device is None:
         device = use_gpu_if_possible()
@@ -123,6 +123,20 @@ def test_model(model, dataloader, performance=class_accuracy, loss_fn=None, devi
     print(f"TESTING - loss {fin_loss if fin_loss is not None else '--'} - performance_class {fin_perf_class:.4f} , performance_obj {fin_perf_obj:.4f} ,performance_noobj {fin_perf_noobj:.4f}")
     return fin_loss, fin_perf_class, fin_perf_obj , fin_perf_noobj 
 
+def save_checkpoint(model, optimizer, save_path, epoch):
+    torch.save({
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'epoch': epoch
+    }, save_path)
+    
+def load_checkpoint(model, optmizer, load_path):
+    checkpoint = torch.load(load_path)
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optmizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    epoch = checkpoint['epoch']
+    
+    return model, optimizer, epoch
 
 
 if __name__ == "__main__":
@@ -134,7 +148,7 @@ if __name__ == "__main__":
     )
     loss_fn = Loss()
     S=[13, 26]
-    num_epochs = 1000
+    num_epochs = 273
 
     ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
               [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
@@ -146,6 +160,6 @@ if __name__ == "__main__":
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
     ).to("cpu")
 
-    train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,None, performance=class_accuracy)
+    train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anchors,None, performance=class_accuracy)
 
     
