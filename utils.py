@@ -98,7 +98,7 @@ def class_accuracy(model, out,y, device, threshold=0.5):
     #print(f"Obj accuracy is: {(correct_obj/(tot_obj+1e-16))*100:2f}%")
     model.train()
 
-    return (correct_class/(tot_class_preds+1e-16))*100 , (correct_noobj/(tot_noobj+1e-16))*100,(correct_obj/(tot_obj+1e-16))*100
+    return (correct_class/(tot_class_preds+1e-16))*100 ,(correct_obj/(tot_obj+1e-16))*100 , (correct_noobj/(tot_noobj+1e-16))*100
 
 
 

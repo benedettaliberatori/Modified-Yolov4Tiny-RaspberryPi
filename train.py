@@ -9,6 +9,8 @@ from dataset import get_data
 import warnings
 warnings.filterwarnings("ignore")
 
+from .torch_utils import use_gpu_if_possible
+
 def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,loss_meter,performance_meter_class,performance_meter_obj,performance_meter_noobj, performance):
 
     losses = []
@@ -45,8 +47,9 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
 
 
 def train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,device, performance):
-    # create the folder for the checkpoints (if it's not None)
-
+   
+    if device is None:
+        device = use_gpu_if_possible()
     
     model = model.to(device)
     model.train()
@@ -72,7 +75,7 @@ def train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,device, 
 
         
 
-    return loss_meter.sum, performance_meter.avg
+    return loss_meter.sum, performance_meter_class.avg, performance_meter_obj.avg, performance_meter_noobj.avg
 
 
 
@@ -82,7 +85,7 @@ if __name__ == "__main__":
     num_anchor = 6
     model = Yolo(3,num_anchor//2,2)
     optimizer = optim.Adam(
-        model.parameters(), lr=0.01, weight_decay=0.03
+        model.parameters(), lr=0.001, momentum=0.973, weight_decay=0.0005
     )
     loss_fn = Loss()
     S=[13, 26]
@@ -96,7 +99,7 @@ if __name__ == "__main__":
     scaled_anchors = (
         torch.tensor(ANCHORS)
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
-    ).to("cpu")
+    ).to(device)
 
     train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,None, performance=class_accuracy)
 
