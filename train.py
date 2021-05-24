@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     num_anchor = 6
     model = Yolo(3,num_anchor//2,2)
-    optimizer = optim.Adam(
+    optimizer = optim.SGD(
         model.parameters(), lr=0.001, momentum=0.973, weight_decay=0.0005
     )
     loss_fn = Loss()
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     scaled_anchors = (
         torch.tensor(ANCHORS)
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
-    ).to(device)
+    ).to("cuda:0")
 
     train_model(train_loader, model, optimizer, loss_fn, scaled_anchors,None, performance=class_accuracy)
 
