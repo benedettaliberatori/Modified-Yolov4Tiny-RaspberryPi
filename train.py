@@ -9,7 +9,7 @@ from dataset import get_data
 import warnings
 warnings.filterwarnings("ignore")
 
-from .torch_utils import use_gpu_if_possible
+from utils import use_gpu_if_possible
 
 def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,loss_meter,performance_meter_class,performance_meter_obj,performance_meter_noobj, performance):
 
