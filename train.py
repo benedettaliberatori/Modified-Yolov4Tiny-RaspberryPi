@@ -1,6 +1,7 @@
 from re import M
 import torch
 import torch.optim as optim
+import os
 from yolo import Yolo
 from loss import Loss
 from tqdm import tqdm
@@ -148,7 +149,7 @@ if __name__ == "__main__":
     )
     loss_fn = Loss()
     S=[13, 26]
-    num_epochs = 273
+    num_epochs = 10
 
     ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
               [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
@@ -161,5 +162,9 @@ if __name__ == "__main__":
     ).to("cpu")
 
     train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anchors,None, performance=class_accuracy)
+    
+    model_save_name = 'model.pt'
+    path = F"/content/drive/MyDrive/ColabNotebooks/YOLO/{model_save_name}" 
+    torch.save(model.state_dict(), path)
 
     
