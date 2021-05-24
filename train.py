@@ -13,7 +13,7 @@ from utils import use_gpu_if_possible
 
 def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,loss_meter,performance_meter_class,performance_meter_obj,performance_meter_noobj, performance):
 
-    losses = []
+
     for x, y in train_loader:
 
         x = x.to(device)
@@ -22,16 +22,20 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
             y[1].to(device),
         )
 
-
+        
+        optimizer.zero_grad()
+        
         out = model(x)
 
         loss = (
             loss_fn(out[0], y0, scaled_anchors[0])
             + loss_fn(out[1], y1, scaled_anchors[1])
         )
-
-        losses.append(loss.item())
-        optimizer.zero_grad()
+        
+       
+        loss.backward()
+        optimizer.step()
+        
 
         acc1 , acc2 , acc3 = performance(model, out,y,device)
         # 7. update the loss and accuracy AverageMeter
@@ -84,8 +88,8 @@ if __name__ == "__main__":
 
     num_anchor = 6
     model = Yolo(3,num_anchor//2,2)
-    optimizer = optim.SGD(
-        model.parameters(), lr=0.001, momentum=0.973, weight_decay=0.0005
+    optimizer = optim.Adam(
+        model.parameters(), lr=0.001, weight_decay=0.0005
     )
     loss_fn = Loss()
     S=[13, 26]
