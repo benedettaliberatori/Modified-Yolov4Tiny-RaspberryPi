@@ -83,7 +83,7 @@ def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anch
     return loss_meter.sum, performance_meter_class.avg, performance_meter_obj.avg, performance_meter_noobj.avg
 
 
-def test_model(model, dataloader, performance=class_accuracy, loss_fn=None, device=None):
+def test_model(model, dataloader,scaled_anchors, performance=class_accuracy, loss_fn=None, device=None):
     # create an AverageMeter for the loss if passed
     if loss_fn is not None:
         loss_meter = AverageMeter()
@@ -101,23 +101,23 @@ def test_model(model, dataloader, performance=class_accuracy, loss_fn=None, devi
     with torch.no_grad():
         for X, y in dataloader:
             X = X.to(device)
-            y = y.to(device)
+            #y = y.to(device)
             y0, y1= (
             y[0].to(device),
             y[1].to(device),
         )
-            y_hat = model(X)
+            out = model(X)
             loss = (
             loss_fn(out[0], y0, scaled_anchors[0])
             + loss_fn(out[1], y1, scaled_anchors[1])
         )
         
-            acc1 , acc2 , acc3  =  performance(y_hat,y,device)
+            acc1 , acc2 , acc3  =  performance(out,model, y,device)
             if loss_fn is not None:
                 loss_meter.update(loss.item(), X.shape[0])
-            performance_meter_class.update(val=acc1, n=x.shape[0])
-            performance_meter_obj.update(val=acc2, n=x.shape[0])
-            performance_meter_noobj.update(val=acc3, n=x.shape[0])
+            performance_meter_class.update(val=acc1, n=X.shape[0])
+            performance_meter_obj.update(val=acc2, n=X.shape[0])
+            performance_meter_noobj.update(val=acc3, n=X.shape[0])
     # get final performances
     fin_loss = loss_meter.sum if loss_fn is not None else None
     fin_perf_class, fin_perf_obj , fin_perf_noobj = performance_meter_class.avg , performance_meter_obj.avg , performance_meter_noobj.avg
@@ -149,22 +149,25 @@ if __name__ == "__main__":
     )
     loss_fn = Loss()
     S=[13, 26]
-    num_epochs = 10
-
+    num_epochs = 50
+#
     ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
-              [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
-
+           [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
+#
     train_loader, test_loader = get_data('train.csv','test.csv')
-
+#
     scaled_anchors = (
         torch.tensor(ANCHORS)
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
-    ).to("cpu")
-
+    ).to("cuda:0")
+#
     train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anchors,None, performance=class_accuracy)
-    
+    #
     model_save_name = 'model.pt'
-    path = F"/content/drive/MyDrive/ColabNotebooks/YOLO/{model_save_name}" 
+    path = F"/content/drive/OD/{model_save_name}" 
     torch.save(model.state_dict(), path)
-
+    
+    #model = Yolo(3, 6//2, 2)
+    #model.load_state_dict(torch.load('model_1111.pt'))
+    #test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cuda:0')
     
