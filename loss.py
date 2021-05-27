@@ -15,8 +15,8 @@ class Loss(nn.Module):
 
         
         self.lambda_class = 1
-        self.lambda_noobj = 1
-        self.lambda_obj = 1
+        self.lambda_noobj = 10
+        self.lambda_obj = 5
         self.lambda_box = 1
 
     def forward(self, predictions, target, anchors):

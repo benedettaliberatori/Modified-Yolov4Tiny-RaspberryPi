@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
     num_anchor = 6
     model = Yolo(3,num_anchor//2,2)
-    optimizer = optim.Adam(
+    optimizer = optim.SGD(
         model.parameters(), lr=0.001, weight_decay=0.0005
     )
     loss_fn = Loss()
