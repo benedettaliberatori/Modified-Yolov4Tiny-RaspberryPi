@@ -142,6 +142,7 @@ def get_data(train_csv_path, test_csv_path):
         batch_size=BATCH_SIZE,
         num_workers=NUM_WORKERS,
         shuffle=True,
+        pin_memory=True,
         
     )
     test_loader = DataLoader(
@@ -149,6 +150,7 @@ def get_data(train_csv_path, test_csv_path):
         batch_size=BATCH_SIZE,
         num_workers=NUM_WORKERS,
         shuffle=False,
+        pin_memory=True,
  
     )
 

@@ -55,7 +55,8 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaler,  scaled_anchors
 
 
 def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, scaled_anchors,device, performance):
-   
+    
+    torch.backends.cudnn.benchmark = True
     if device is None:
         device = use_gpu_if_possible()
     
