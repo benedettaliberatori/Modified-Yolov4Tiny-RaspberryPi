@@ -15,7 +15,6 @@ class backbone(nn.Module):
         self.csp = CSPBlock(256,256)
         self.conv3 = ConvBlock(512,512,3,1)
         self.convaux = ConvBlock(128,256,3,2)
-
     def forward(self,x):
         x = self.resblock1(self.conv2(self.conv1(x)))
         out = self.auxiliary1(x)

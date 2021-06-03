@@ -7,6 +7,7 @@ from loss import Loss
 from utils import  AverageMeter,class_accuracy
 from dataset import get_data
 import warnings
+import time
 warnings.filterwarnings("ignore")
 
 from utils import use_gpu_if_possible
@@ -73,12 +74,13 @@ def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anch
         print(f"Epoch {epoch+1} --- learning rate {optimizer.param_groups[0]['lr']:.5f}")
         
 
-
+        start = time.perf_counter()
         train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,loss_meter, performance_meter_class,performance_meter_obj,performance_meter_noobj, performance)
-
+        end = time.perf_counter()
 
         print(f"Epoch {epoch+1} completed. Loss - total: {loss_meter.sum:.4f} - average: {loss_meter.avg:.4f}; Performance_class: {performance_meter_class.avg:.4f};")
         print(f"Performance_obj: {performance_meter_obj.avg:.4f}; Performance_noobj: {performance_meter_noobj.avg:.4f};")
+        print(f"Elapsed time: {end-start:.4f};")
 
         
 

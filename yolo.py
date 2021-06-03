@@ -19,7 +19,6 @@ class Yolo(nn.Module):
         self.conv5 = nn.Conv2d(512,255,1,1)
         self.head = nn.Conv2d(255,B*(5+num_classes),1,1)
         self.B = B
-
     def forward(self,x):
         out1 , out2 = self.back(x)
         out2 = self.conv1(out2)
@@ -30,7 +29,6 @@ class Yolo(nn.Module):
         feat1 = self.conv2(feat1)
         feat1 = self.conv4(feat1)
         feat2 = self.conv5(feat2)
-
         return self.head(feat2).reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),self.head(feat1).reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
 
 

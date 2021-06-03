@@ -24,7 +24,6 @@ class CSPBlock(nn.Module):
         self.conv3 = ConvBlock(out_channels // 2, out_channels // 2, 3)
         self.conv4 = ConvBlock(out_channels, out_channels, 1)
         self.maxpool = nn.MaxPool2d([2, 2], [2, 2])
-
     def forward(self, x):
         x = self.conv1(x)
         feat = x
@@ -49,7 +48,6 @@ class ResBlockD(nn.Module):
         self.conv3 = nn.Conv2d(out_channels,in_channels,1,stride =1)
         self.conv4 = nn.Conv2d(in_channels,in_channels,1,stride =1)
         self.avgpool = nn.AvgPool2d(2,2)
-
     def forward(self,x):
         x_a = self.conv1(x)
         x_b = self.avgpool(x)
@@ -72,7 +70,6 @@ class ChannelAttention(nn.Module):
                                nn.ReLU(),
                                nn.Linear(in_channels // ratio, in_channels, bias=False))
         self.sigmoid = nn.Sigmoid()
-
     def forward(self, x):
         avg = self.avg_pool(x)
         avg = avg.view(-1,1*1*self.in_channels)
@@ -94,7 +91,6 @@ class SpatialAttention(nn.Module):
 
         self.conv1 = nn.Conv2d(2, 1, kernel_size, padding=kernel_size//2, bias=False)
         self.sigmoid = nn.Sigmoid()
-
     def forward(self, x):
         avg_out = torch.mean(x, dim=1, keepdim=True)
         max_out, _ = torch.max(x, dim=1, keepdim=True)
@@ -113,14 +109,12 @@ class AuxiliaryResBlock(nn.Module):
         self.spatial_attention = SpatialAttention()
         
     def forward(self,x):
-
         x = self.conv1(x)
         feat = x
         x = self.conv2(x)
         x = x * self.channel_attention(x)
         x = x * self.spatial_attention(x)
         out = torch.cat([x,feat],dim=1)
-
         return out
 
 
