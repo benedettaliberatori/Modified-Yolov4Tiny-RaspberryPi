@@ -4,7 +4,6 @@ import torch.optim as optim
 import os
 from yolo import Yolo
 from loss import Loss
-from tqdm import tqdm
 from utils import  AverageMeter,class_accuracy
 from dataset import get_data
 import warnings
@@ -24,7 +23,10 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
         )
 
         
-        optimizer.zero_grad()
+        #optimizer.zero_grad()
+        for param in model.parameters():
+            param.grad = None
+
         
         out = model(x)
 
@@ -39,7 +41,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
         
 
         acc1 , acc2 , acc3 = performance(out,model, y,device)
-        # 7. update the loss and accuracy AverageMeter
+        
         loss_meter.update(val=loss.item(), n=x.shape[0])
 
 
@@ -161,13 +163,13 @@ if __name__ == "__main__":
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
     ).to("cuda:0")
 #
-    train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anchors,None, performance=class_accuracy)
+    #train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anchors,None, performance=class_accuracy)
     #
-    model_save_name = 'model.pt'
-    path = F"/content/drive/OD/{model_save_name}" 
-    torch.save(model.state_dict(), path)
+    #model_save_name = 'model.pt'
+    #path = F"/content/drive/OD/{model_save_name}" 
+    #torch.save(model.state_dict(), path)
     
     #model = Yolo(3, 6//2, 2)
-    #model.load_state_dict(torch.load('model_1111.pt'))
-    #test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cuda:0')
+    model.load_state_dict(torch.load('model.pt'))
+    test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cuda:0')
     
