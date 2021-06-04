@@ -5,10 +5,51 @@ import numpy as np
 import os
 import random
 import torch
+from torchvision.ops import nms
 
 from collections import Counter
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+
+
+def NMS(prediction, conf_thres= 0.8, nms_thres = 0.25):
+    box_temp=prediction.new(prediction.shape)
+    box_temp[:,:,0]=prediction[:,:,0]-prediction[:,:,2]/2
+    box_temp[:,:,1]=prediction[:,:,1]-prediction[:,:,3]/2
+    box_temp[:,:,2]=prediction[:,:,0]+prediction[:,:,2]/2
+    box_temp[:,:,3]=prediction[:,:,1]+prediction[:,:,3]/2
+    prediction[:,:,:4]=box_temp[:,:,:4]
+    
+    output = [None for _ in range(len(prediction))]
+    
+    for index, pred in enumerate(prediction):
+        cls_conf, cls_pred = torch.max(pred[:,5:7], dim=1, keepdim=True)
+        score = pred[:,4]*cls_conf[:,0]
+        pred=pred[score>conf_thres] # squeeze?
+        
+        cls_conf=cls_conf[(score>conf_thres)]
+        cls_pred=cls_pred[(score>conf_thres)]
+        
+        if pred.size(0) == 0:
+            continue
+        
+        detection=torch.cat((pred[:,:5],cls_conf.float(),cls_pred.float()),dim=1) # 6 values (coordinates, class_conf and cls_pred)
+        
+        for cls in range(2):
+            is_cls = detection[:,-1]==cls
+            
+            detected_class = detection[is_cls]
+            
+            boxes = detected_class[:,:4]
+            score = detected_class[:,4]*detected_class[:,5]
+            
+            keep = nms(boxes, score, nms_thres)
+            
+            max_detection = detected_class[keep]
+            
+            output[index] = max_detection if output[index] is None else torch.cat((output[index], max_detection))
+            
+    return output      
 
 
 
