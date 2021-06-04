@@ -1,8 +1,11 @@
 from backbone import backbone
 from CSP import ConvBlock
+from utils import NMS
+from PIL import ImageDraw
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
+import numpy as np
 
 
 class DecodeBox(nn.Module):
@@ -83,10 +86,14 @@ class Yolo(nn.Module):
         return self.head(feat2).reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),self.head(feat1).reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
 
     def detect(self,frame):
-
+        
+        confidence = 0.9
+        
         ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
            [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
+        
         self.feat_decoder=[]
+        
         for i in range(2):
             decoder=DecodeBox(ANCHORS[i],2,(416,416))
             self.feat_decoder.append(decoder)
@@ -105,7 +112,47 @@ class Yolo(nn.Module):
             out_list.append(decoder_out)
 
             output=torch.cat(out_list,dim=1)
-        
+            
+            # print(len(output))
+            # print(output.shape)
+            
+            batch_detection = NMS(output)
+            
+            # print(len(batch_detection))
+            # print(batch_detection)
+
+            end_score = batch_detection[:,4] * batch_detection[:,5]
+            end_index = end_score > confidence
+            
+            end_label=np.array(batch_detection[end_index,-1],np.int32)
+            end_boxes=np.array(batch_detection[end_index,:4])
+            # end_xmin = np.expand_dims(end_boxes[:, 0], -1)
+            # end_ymin = np.expand_dims(end_boxes[:, 1], -1)
+            # end_xmax = np.expand_dims(end_boxes[:, 2], -1)
+            # end_ymax = np.expand_dims(end_boxes[:, 3], -1)
+            
+            for i, c in enumerate(end_label):
+                # score=end_score[i]
+                top,left,bottom,right=end_boxes[i]
+                
+                top = max(0, np.floor(top + 0.5).astype('int32'))
+                left = max(0, np.floor(left + 0.5).astype('int32'))
+                bottem = min(np.shape(frame)[0], np.floor(bottem + 0.5).astype('int32'))
+                right = min(np.shape(frame)[1], np.floor(right + 0.5).astype('int32'))
+                
+                if c == 0: # mask
+                    color = (0,250,154)
+                else: # no mask
+                    color = (255, 0, 0)
+                    
+                draw = ImageDraw.Draw(frame)
+                
+                for i in range(2):
+                    draw.rectangle((left+i,top+i,right-i,bottom-i),outline=color,width=5)
+                    
+                del draw
+                
+        return frame                
 
 
 
