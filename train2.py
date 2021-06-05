@@ -169,8 +169,10 @@ if __name__ == "__main__":
     ).to("cuda:0")
 #   
 
+
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=.1)
     scaler = torch.cuda.amp.GradScaler()
-    train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy)
+    train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler=scheduler,epoch_start_scheduler= 40)
     
     model_save_name = 'model.pt'
     path = F"/content/drive/OD/{model_save_name}" 
