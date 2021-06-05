@@ -175,7 +175,7 @@ if __name__ == "__main__":
     train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler=scheduler,epoch_start_scheduler= 40)
     
     model_save_name = 'model.pt'
-    path = F"/content/drive/OD/{model_save_name}" 
+    path = F"{model_save_name}" 
     torch.save(model.state_dict(), path)
     
     #model = Yolo(3, 6//2, 2)
