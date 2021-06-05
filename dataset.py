@@ -107,8 +107,7 @@ def get_data(train_csv_path, test_csv_path):
     IMG_DIR = DATASET + "/images/"
     LABEL_DIR = DATASET + "/labels/"
 
-    ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
-              [(0.03   ,  0.056   ), (0.01   ,  0.018   ), (0.006   , 0.01    )]]
+    ANCHORS = [[(0.28, 0.22), (0.38, 0.48), (0.9, 0.78)], [(0.07, 0.15), (0.15, 0.11), (0.14, 0.29)]]
 
     
     transforms = A.Compose(
@@ -119,7 +118,9 @@ def get_data(train_csv_path, test_csv_path):
         ),
         A.Normalize(mean=[0, 0, 0], std=[1, 1, 1], max_pixel_value=255,),
         ToTensorV2(),
-    ],)
+    ],
+    bbox_params=A.BboxParams(format="yolo", min_visibility=0.4, label_fields=[]),
+    )
 
     train_dataset = YOLODataset(
         train_csv_path,
