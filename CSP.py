@@ -79,8 +79,8 @@ class ChannelAttention(nn.Module):
         max = avg.view(-1,1*1*self.in_channels)
         
         max_out = self.fc(max)
-        avg_out = avg_out.view(1,self.in_channels,1,1)
-        max_out = avg_out.view(1,self.in_channels,1,1)
+        avg_out = avg_out.view(x.shape[0],self.in_channels,1,1)
+        max_out = avg_out.view(x.shape[0],self.in_channels,1,1)
         out = avg_out + max_out
         return self.sigmoid(out)
     
