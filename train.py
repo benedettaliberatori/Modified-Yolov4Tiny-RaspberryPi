@@ -165,13 +165,13 @@ if __name__ == "__main__":
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
     ).to("cuda:0")
 #
-    #train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anchors,None, performance=class_accuracy)
+    train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaled_anchors,None, performance=class_accuracy)
     #
     #model_save_name = 'model.pt'
     #path = F"/content/drive/OD/{model_save_name}" 
     #torch.save(model.state_dict(), path)
     
     #model = Yolo(3, 6//2, 2)
-    model.load_state_dict(torch.load('model.pt'))
-    test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cuda:0')
+    #model.load_state_dict(torch.load('model.pt'))
+    #test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cuda:0')
     
