@@ -55,7 +55,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaler,  scaled_anchors
 
 
 
-def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, scaled_anchors,device, performance):
+def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, scaled_anchors,device, performance, lr_scheduler=None, epoch_start_scheduler=1):
     
     torch.backends.cudnn.benchmark = True
     if device is None:
@@ -84,7 +84,9 @@ def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, sca
         print(f"Performance_obj: {performance_meter_obj.avg:.4f}; Performance_noobj: {performance_meter_noobj.avg:.4f};")
         print(f"Elapsed time: {end-start:.4f};")
 
-        
+        if lr_scheduler is not None:
+            if epoch >= epoch_start_scheduler:
+                lr_scheduler.step()
 
     return loss_meter.sum, performance_meter_class.avg, performance_meter_obj.avg, performance_meter_noobj.avg
 
