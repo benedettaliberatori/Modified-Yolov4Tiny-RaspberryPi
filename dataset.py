@@ -107,7 +107,7 @@ def get_data(train_csv_path, test_csv_path):
     IMG_DIR = DATASET + "/images/"
     LABEL_DIR = DATASET + "/labels/"
 
-    ANCHORS = [[(0.28, 0.22), (0.38, 0.48), (0.9, 0.78)], [(0.07, 0.15), (0.15, 0.11), (0.14, 0.29)]]
+    ANCHORS = [[(0.289062, 0.339265), (0.02 ,  0.035), (0.007 ,   0.012   )], [(0.035 , 0.064  ), (0.012 ,0.021), (0.08  , 0.129  )]]
 
     
     transforms = A.Compose(
