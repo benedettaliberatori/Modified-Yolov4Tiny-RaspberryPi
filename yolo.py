@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 import numpy as np
+from utils import use_gpu_if_possible
 
 
 class DecodeBox(nn.Module):
@@ -61,6 +62,8 @@ class DecodeBox(nn.Module):
 
 
 class Yolo(nn.Module):
+    
+           
     def __init__(self,in_channels,B,num_classes):
         super().__init__()
         self.back = backbone(in_channels)
@@ -94,6 +97,11 @@ class Yolo(nn.Module):
         
         self.feat_decoder=[]
         
+        self.net=Yolo(3, 6//2, 2).eval()
+        model_dict=torch.load("model_100_epochs.pt", map_location = use_gpu_if_possible())
+        self.net.load_state_dict(model_dict)
+
+
         for i in range(2):
             decoder=DecodeBox(ANCHORS[i],2,(416,416))
             self.feat_decoder.append(decoder)
@@ -104,7 +112,7 @@ class Yolo(nn.Module):
 
         with torch.no_grad():
 
-            out_13, out_26 = self.forward(img)
+            out_13, out_26 = self.net(img)
 
             decoder_out=self.feat_decoder[0](out_13)
             out_list.append(decoder_out)
