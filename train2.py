@@ -171,6 +171,7 @@ if __name__ == "__main__":
     ).to("cuda:0")
 #   
 
+    print(str(sys.argv[0]))
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer_SGD, step_size=20, gamma=1.1)
     if str(sys.argv[0]) == "SGD":
