@@ -179,9 +179,9 @@ if __name__ == "__main__":
         model_save_name = 'model_SGD.pt'
         scheduler = scheduler
     
-    if str(sys.argv[-1]) == "RMS":
-        optimizer = optimizer_RMS
-        model_save_name = 'model_RMS.pt'
+    if str(sys.argv[-1]) == "SGD2":
+        optimizer = optimizer_SGD
+        model_save_name = 'model_SGD_no_scheduler.pt'
         scheduler = None
 
     scaler = torch.cuda.amp.GradScaler()
