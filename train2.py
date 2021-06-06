@@ -8,6 +8,7 @@ from utils import  AverageMeter,class_accuracy
 from dataset import get_data
 import warnings
 import time
+import sys
 warnings.filterwarnings("ignore")
 
 from utils import use_gpu_if_possible
@@ -152,9 +153,10 @@ if __name__ == "__main__":
 
     num_anchor = 6
     model = Yolo(3,num_anchor//2,2)
-    optimizer = optim.SGD(
+    optimizer_SGD = optim.SGD(
         model.parameters(), lr=0.001, weight_decay=0.0005
     )
+    optimizer_RMS = optim.RMSprop(model.parameters(), lr=0.001, weight_decay=0.0005)
     loss_fn = Loss()
     S=[13, 26]
     num_epochs = 100
@@ -170,11 +172,21 @@ if __name__ == "__main__":
 #   
 
 
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=1.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer_SGD, step_size=20, gamma=1.1)
+    if sys.argv[0] == "SGD":
+        optimizer = optimizer_SGD
+        model_save_name = 'model_SGD.pt'
+        scheduler = scheduler
+    
+    if sys.argv[0] == "RMS":
+        optimizer = optimizer_RMS
+        model_save_name = 'model_RMS.pt'
+        scheduler = None
+
     scaler = torch.cuda.amp.GradScaler()
     train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler=scheduler,epoch_start_scheduler= 40)
     
-    model_save_name = 'model.pt'
+    
     path = F"{model_save_name}" 
     torch.save(model.state_dict(), path)
     
