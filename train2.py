@@ -171,15 +171,15 @@ if __name__ == "__main__":
     ).to("cuda:0")
 #   
 
-    print(str(sys.argv[0]))
+
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer_SGD, step_size=20, gamma=1.1)
-    if str(sys.argv[0]) == "SGD":
+    if str(sys.argv[1]) == "SGD":
         optimizer = optimizer_SGD
         model_save_name = 'model_SGD.pt'
         scheduler = scheduler
     
-    if str(sys.argv[0]) == "RMS":
+    if str(sys.argv[1]) == "RMS":
         optimizer = optimizer_RMS
         model_save_name = 'model_RMS.pt'
         scheduler = None
