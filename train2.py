@@ -153,7 +153,7 @@ if __name__ == "__main__":
     num_anchor = 6
     model = Yolo(3,num_anchor//2,2)
     optimizer = optim.SGD(
-        model.parameters(), lr=0.1, weight_decay=0.0005
+        model.parameters(), lr=0.001, weight_decay=0.0005
     )
     loss_fn = Loss()
     S=[13, 26]
@@ -170,7 +170,7 @@ if __name__ == "__main__":
 #   
 
 
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=1.1)
     scaler = torch.cuda.amp.GradScaler()
     train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler=scheduler,epoch_start_scheduler= 40)
     
