@@ -65,7 +65,7 @@ class DecodeBox(nn.Module):
 
 
 
-class Yolo(nn.Module):
+class Yolo_Block(nn.Module):
     
     def __init__(self,in_channels,B,num_classes):
         super().__init__()
@@ -78,7 +78,7 @@ class Yolo(nn.Module):
         self.conv5 = nn.Conv2d(512,255,1,1)
         self.head = nn.Conv2d(255,B*(5+num_classes),1,1)
         self.B = B
-        self.generate()
+        #self.generate()
 
     def forward(self,x):
         out1 , out2 = self.back(x)
@@ -92,8 +92,13 @@ class Yolo(nn.Module):
         feat2 = self.conv5(feat2)
         return self.head(feat2).reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),self.head(feat1).reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
     
+class Yolo(object):
+
+    def __init__(self,**kwargs):
+        self.generate()
+    
     def generate(self):
-        self.net=Yolo(3,3,2).eval()
+        self.net=Yolo_Block(3,3,2).eval()
         
         model_dict=torch.load("model_100_epochs.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
@@ -103,7 +108,7 @@ class Yolo(nn.Module):
                        
         with torch.no_grad():
 
-            out = net(Tensor_frame)
+            out = self.net(Tensor_frame)
             boxes = []
             
             for i in range(2):
@@ -140,12 +145,13 @@ if __name__ == '__main__':
     scaled_anchors = torch.tensor(ANCHORS) / (
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
         
-    model = Yolo(3,3,2)
+    model = Yolo()
     
     
-    image = Image.open("img.jpg").convert("RGB")
+    image = Image.open("/Users/ciroantonio/Desktop/prova.jpg").convert("RGB")
     image_tensor = transforms.ToTensor()(image).unsqueeze_(0)
-    image = model.detect_Persson(image, scaled_anchors)
+    image = model.detect_Persson(image,image_tensor,scaled_anchors)
+    
 
-    image=image.save("image")
+    image=image.save("/Users/ciroantonio/Desktop/image.jpg")
     
