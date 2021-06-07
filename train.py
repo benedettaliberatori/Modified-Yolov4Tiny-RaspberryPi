@@ -46,9 +46,9 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaled_anchors,device,l
         loss_meter.update(val=loss.item(), n=x.shape[0])
 
 
-        performance_meter_class.update(val=acc1, n=x.shape[0])
-        performance_meter_obj.update(val=acc2, n=x.shape[0])
-        performance_meter_noobj.update(val=acc3, n=x.shape[0])
+        performance_meter_class.update(val=acc1.item(), n=x.shape[0])
+        performance_meter_obj.update(val=acc2.item(), n=x.shape[0])
+        performance_meter_noobj.update(val=acc3.item(), n=x.shape[0])
 
       
 
