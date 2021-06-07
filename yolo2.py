@@ -1,4 +1,5 @@
 
+from types import FrameType
 from utils2 import cells_to_bboxes, non_max_suppression, NMS
 from backbone import backbone
 from CSP import ConvBlock
@@ -89,25 +90,12 @@ class Yolo(nn.Module):
         feat2 = self.conv5(feat2)
         return self.head(feat2).reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),self.head(feat1).reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
     
-    def detect_Persson(self,frame):
-                
-        ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
-           [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
-             
-        S = [13,26]
-        
-        scaled_anchors = torch.tensor(ANCHORS) / (
-        1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
-        
-        self.net=Yolo(3, 6//2, 2).eval()
-        model_dict=torch.load("model_100_epochs.pt", map_location = use_gpu_if_possible())
-        self.net.load_state_dict(model_dict)
-        
-        img = frame
+    def detect_Persson(self,frame, scaled_anchors ):
+                   
         
         with torch.no_grad():
 
-            out = self.net(img)
+            out = self.net(frame)
             boxes = []
             
             for i in range(2):
@@ -119,17 +107,48 @@ class Yolo(nn.Module):
             boxes = non_max_suppression(boxes, iou_threshold=.8, threshold=.7, box_format = "midpoint")
             #boxes = NMS(boxes)
             print(boxes)
+
+        
+
+            for box in boxes:
+                if box[0] == 0: # mask
+                        color = (0,250,154)
+                else: # no mask
+                        color = (255, 0, 0)
+
+
+                draw = ImageDraw.Draw(frame)
+                box = box[2:]
+                upper_left_x = box[0] - box[2] / 2
+                upper_left_y = box[1] - box[3] / 2
+                height, width = 416, 416
+                draw.rectangle((upper_left_x * width, upper_left_y * height , box[2]* width, box[3]* height),outline=color , width=2)
+                del draw
             
-        return boxes           
+            
+    
+            return frame           
 
 
 if __name__ == '__main__':
+     
+    ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
+           [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
     
-    img = Image.open("0013.jpg").convert('RGB')
-    x = transforms.ToTensor()(img).unsqueeze_(0)
-    model = Yolo(3,3,2)
-    boxes = model.detect_Persson(x)
-    plot_image(img, boxes)
+               
+    S = [13,26]   
+
+    scaled_anchors = torch.tensor(ANCHORS) / (
+        1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
+        
+    model=Yolo(3, 6//2, 2)
+    model.load_state_dict(torch.load("model_100_epochs.pt", map_location = use_gpu_if_possible()))
+    
+    
+    
+    image = model.detect_Persson(x, image, scaled_anchors)
+    
+    #plot_image(img, boxes)
     #odel = Yolo(3,20,5)
     #out1,out2 = model(x)
 
