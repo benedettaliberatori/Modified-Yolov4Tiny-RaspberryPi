@@ -76,6 +76,7 @@ class Yolo(nn.Module):
         self.conv5 = nn.Conv2d(512,255,1,1)
         self.head = nn.Conv2d(255,B*(5+num_classes),1,1)
         self.B = B
+        self.generate()
 
     def forward(self,x):
         out1 , out2 = self.back(x)
@@ -89,6 +90,13 @@ class Yolo(nn.Module):
         feat2 = self.conv5(feat2)
         return self.head(feat2).reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),self.head(feat1).reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
     
+    def generate(self):
+        self.net=Yolo(3,3,2).eval()
+        
+        model_dict=torch.load("model_100_epochs.pt", map_location = use_gpu_if_possible())
+        self.net.load_state_dict(model_dict)
+        
+
     def detect_Persson(self,frame, scaled_anchors, iou_thresh = .8, tresh = .7 ):
                        
         with torch.no_grad():
@@ -131,10 +139,9 @@ if __name__ == '__main__':
     scaled_anchors = torch.tensor(ANCHORS) / (
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
         
-    model=Yolo(3, 6//2, 2)
-    model.load_state_dict(torch.load("model_100_epochs.pt", map_location = use_gpu_if_possible()))
-    
-    image = model.detect_Persson(x, image, scaled_anchors)
+    model = Yolo(3,3,2)
+      
+    image = model.detect_Persson(image, scaled_anchors)
     
     #plot_image(img, boxes)
     #odel = Yolo(3,20,5)
