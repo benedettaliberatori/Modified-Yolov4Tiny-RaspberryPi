@@ -99,11 +99,11 @@ class Yolo(nn.Module):
         self.net.load_state_dict(model_dict)
         
 
-    def detect_Persson(self,frame, scaled_anchors, iou_thresh = .8, tresh = .7 ):
+    def detect_Persson(self, PIL_frame,Tensor_frame, scaled_anchors, iou_thresh = .8, tresh = .7 ):
                        
         with torch.no_grad():
 
-            out = self(Tensor_frame).eval()
+            out = net(Tensor_frame)
             boxes = []
             
             for i in range(2):
@@ -113,8 +113,7 @@ class Yolo(nn.Module):
                 boxes += cells_to_bboxes(out[i], S=out[i].shape[2], anchors = anchor)[0]
                 
             boxes = non_max_suppression(boxes, iou_threshold= iou_thresh, threshold=tresh, box_format = "midpoint")
-            #boxes = NMS(boxes)
-            # print(boxes)
+            
 
             for box in boxes:
                 if box[0] == 0: # mask
@@ -142,11 +141,11 @@ if __name__ == '__main__':
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
         
     model = Yolo(3,3,2)
-      
-    image = model.detect_Persson(image, scaled_anchors)
     
-    #plot_image(img, boxes)
-    #odel = Yolo(3,20,5)
-    #out1,out2 = model(x)
+    
+    image = Image.open("img.jpg").convert("RGB")
+    image_tensor = transforms.ToTensor()(image).unsqueeze_(0)
+    image = model.detect_Persson(image, scaled_anchors)
 
-    #print('out1 :',out1.shape,'out2:',out2.shape)
+    image=image.save("image")
+    
