@@ -1,9 +1,11 @@
 
 from types import FrameType
+
+from PIL.Image import Image
 from utils2 import cells_to_bboxes, non_max_suppression, NMS
 from backbone import backbone
 from CSP import ConvBlock
-from PIL import ImageDraw
+from PIL import ImageDraw, Image
 import torch.nn as nn
 import torch
 import numpy as np
@@ -90,6 +92,7 @@ class Yolo(nn.Module):
         feat2 = self.conv5(feat2)
         return self.head(feat2).reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),self.head(feat1).reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
     
+<<<<<<< HEAD
     def generate(self):
         self.net=Yolo(3,3,2).eval()
         
@@ -98,10 +101,13 @@ class Yolo(nn.Module):
         
 
     def detect_Persson(self,frame, scaled_anchors, iou_thresh = .8, tresh = .7 ):
+=======
+    def detect_Persson(self, PIL_frame, Tensor_frame, scaled_anchors, iou_thresh = .8, tresh = .7 ):
+>>>>>>> a896591310b1d5c13f1110e5d20e2cf286d45982
                        
         with torch.no_grad():
 
-            out = self.net(frame)
+            out = self(Tensor_frame).eval()
             boxes = []
             
             for i in range(2):
@@ -120,7 +126,7 @@ class Yolo(nn.Module):
                 else: # no mask
                         color = (255, 0, 0)
 
-                draw = ImageDraw.Draw(frame)
+                draw = ImageDraw.Draw(PIL_frame)
                 box = box[2:]
                 upper_left_x = box[0] - box[2] / 2
                 upper_left_y = box[1] - box[3] / 2
@@ -128,7 +134,7 @@ class Yolo(nn.Module):
                 draw.rectangle((upper_left_x * width, upper_left_y * height , box[2]* width, box[3]* height),outline=color , width=2)
                 del draw
             
-            return frame           
+            return PIL_frame           
 
 
 if __name__ == '__main__':
@@ -139,9 +145,20 @@ if __name__ == '__main__':
     scaled_anchors = torch.tensor(ANCHORS) / (
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
         
+<<<<<<< HEAD
     model = Yolo(3,3,2)
       
     image = model.detect_Persson(image, scaled_anchors)
+=======
+    model=Yolo(3, 6//2, 2)
+    model.load_state_dict(torch.load("model_100_epochs.pt", map_location = use_gpu_if_possible()))
+    
+    image = Image.open("0013.jpg").convert('RGB')
+    image_tensor = transforms.ToTensor()(image).unsqueeze_(0)
+    
+    image = model.detect_Persson(image, image_tensor, scaled_anchors)
+    image = image.save("new_0013.jpg")
+>>>>>>> a896591310b1d5c13f1110e5d20e2cf286d45982
     
     #plot_image(img, boxes)
     #odel = Yolo(3,20,5)
