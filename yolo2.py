@@ -11,7 +11,7 @@ import torch
 import numpy as np
 from utils2 import use_gpu_if_possible, plot_image
 from torchvision import transforms
-
+import cv2
 
 class DecodeBox(nn.Module):
 
@@ -104,7 +104,7 @@ class Yolo(object):
         self.net.load_state_dict(model_dict)
         
 
-    def detect_Persson(self, PIL_frame,Tensor_frame, scaled_anchors, iou_thresh = .8, tresh = .7 ):
+    def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .8, tresh = .7 ):
                        
         with torch.no_grad():
 
@@ -125,16 +125,19 @@ class Yolo(object):
                         color = (0,250,154)
                 else: # no mask
                         color = (255, 0, 0)
-
-                draw = ImageDraw.Draw(PIL_frame)
-                box = box[2:]
-                upper_left_x = box[0] - box[2] / 2
-                upper_left_y = box[1] - box[3] / 2
+                        
                 height, width = 416, 416
-                draw.rectangle((upper_left_x * width, upper_left_y * height , box[2]* width, box[3]* height),outline=color , width=2)
-                del draw
-            
-            return PIL_frame           
+
+                box = box[2:]
+                p0 = (int((box[0] - box[2]/2)*height) ,int((box[1] - box[3]/2)*width))
+                p1 = (int((box[0] + box[2]/2)*height) ,int((box[1] + box[3]/2)*width))
+                
+                print(p0)
+                print(p1)
+                
+                CV2_frame = cv2.rectangle(CV2_frame, p0, p1, color, thickness=2)
+                
+            return CV2_frame           
 
 
 if __name__ == '__main__':
@@ -147,11 +150,12 @@ if __name__ == '__main__':
         
     model = Yolo()
     
-    
-    image = Image.open("/Users/ciroantonio/Desktop/prova.jpg").convert("RGB")
+    image = cv2.imread("arianna.jpg", cv2.IMREAD_UNCHANGED)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image_tensor = transforms.ToTensor()(image).unsqueeze_(0)
+    
     image = model.detect_Persson(image,image_tensor,scaled_anchors)
     
-
-    image=image.save("/Users/ciroantonio/Desktop/image.jpg")
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    cv2.imwrite("new_arianna.jpg", image)
     
