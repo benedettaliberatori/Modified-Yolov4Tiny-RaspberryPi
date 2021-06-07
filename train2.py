@@ -154,12 +154,12 @@ if __name__ == "__main__":
     num_anchor = 6
     model = Yolo(3,num_anchor//2,2)
     optimizer_SGD = optim.SGD(
-        model.parameters(), lr=0.001, weight_decay=0.0005
+        model.parameters(), lr=0.001, weight_decay=0.0005,momentum=0.973
     )
     optimizer_RMS = optim.RMSprop(model.parameters(), lr=0.001, weight_decay=0.0005)
     loss_fn = Loss()
     S=[13, 26]
-    num_epochs = 100
+    num_epochs = 250
 #
     ANCHORS = [[(0.289062, 0.339265), (0.02 ,  0.035), (0.007 ,   0.012   )], [(0.035 , 0.064  ), (0.012 ,0.021), (0.08  , 0.129  )]]
 #
