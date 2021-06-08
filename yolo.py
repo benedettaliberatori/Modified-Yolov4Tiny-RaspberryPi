@@ -1,9 +1,7 @@
 from backbone import backbone
 from CSP import ConvBlock
-from utils import NMS
 from PIL import ImageDraw
 import torch.nn as nn
-import torch.nn.functional as F
 import torch
 import numpy as np
 from utils import use_gpu_if_possible
