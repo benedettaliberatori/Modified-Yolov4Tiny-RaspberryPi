@@ -113,8 +113,8 @@ class Yolo(object):
             
             for i in range(2):
                 anchor = scaled_anchors[i]
-                print(anchor.shape)
-                print(out[i].shape)
+                #print(anchor.shape)
+                #print(out[i].shape)
                 boxes += cells_to_bboxes(out[i], S=out[i].shape[2], anchors = anchor)[0]
                 
             boxes = non_max_suppression(boxes, iou_threshold= iou_thresh, threshold=tresh, box_format = "midpoint")
@@ -132,8 +132,8 @@ class Yolo(object):
                 p0 = (int((box[0] - box[2]/2)*height) ,int((box[1] - box[3]/2)*width))
                 p1 = (int((box[0] + box[2]/2)*height) ,int((box[1] + box[3]/2)*width))
                 
-                print(p0)
-                print(p1)
+                #print(p0)
+                #print(p1)
                 
                 CV2_frame = cv2.rectangle(CV2_frame, p0, p1, color, thickness=2)
                 
