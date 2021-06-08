@@ -2,14 +2,13 @@ import torch
 import torch.optim as optim
 from yolo2 import Yolo
 from loss import Loss
-from utils2 import  AverageMeter,class_accuracy
+from utils2 import  AverageMeter,class_accuracy, use_gpu_if_possible
 from dataset import get_data
 import warnings
 import time
 import sys
 warnings.filterwarnings("ignore")
 
-from utils import use_gpu_if_possible
 
 def train_epoch(train_loader, model, optimizer, loss_fn, scaler,  scaled_anchors,device,loss_meter,performance_meter_class,performance_meter_obj,performance_meter_noobj, performance):
 
