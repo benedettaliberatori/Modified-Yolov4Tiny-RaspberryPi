@@ -154,12 +154,12 @@ if __name__ == "__main__":
     num_anchor = 6
     model = Yolo(3,num_anchor//2,2)
     optimizer_SGD = optim.SGD(
-        model.parameters(), lr=0.001, weight_decay=0.0005,momentum=0.973
+        model.parameters(), lr=0.001, weight_decay=0.0005
     )
     optimizer_RMS = optim.RMSprop(model.parameters(), lr=0.001, weight_decay=0.0005)
     loss_fn = Loss()
     S=[13, 26]
-    num_epochs = 250
+    num_epochs = 200
 #
     ANCHORS = [[(0.289062, 0.339265), (0.02 ,  0.035), (0.007 ,   0.012   )], [(0.035 , 0.064  ), (0.012 ,0.021), (0.08  , 0.129  )]]
 #
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     
     if str(sys.argv[-1]) == "SGD2":
         optimizer = optimizer_SGD
-        model_save_name = 'model_SGD_no_scheduler.pt'
+        model_save_name = 'model_SGD_no_scheduler_200.pt'
         scheduler = None
 
     scaler = torch.cuda.amp.GradScaler()
