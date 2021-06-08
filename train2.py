@@ -149,7 +149,7 @@ def load_checkpoint(model, optmizer, load_path):
 if __name__ == "__main__":
 
     num_anchor = 6
-    model = Yolo(3,num_anchor//2,2)
+    model = Yolo()
     optimizer_SGD = optim.SGD(
         model.parameters(), lr=0.001, weight_decay=0.0005
     )
