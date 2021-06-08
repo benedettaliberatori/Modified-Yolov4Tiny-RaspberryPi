@@ -1,13 +1,5 @@
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-import numpy as np
-import os
-import random
 import torch
-from torchvision.ops import nms
-from collections import Counter
-from torch.utils.data import DataLoader
-from tqdm import tqdm
+
 
 
 def cells_to_bboxes(predictions, anchors, S, is_preds=True):
@@ -91,89 +83,8 @@ def non_max_suppression(bboxes, iou_threshold, threshold, box_format="corners"):
 
     return bboxes_after_nms
 
-def plot_image(image, boxes):
-    """Plots predicted bounding boxes on the image"""
-    cmap = plt.get_cmap("tab20b")
-    class_labels = ["mask", "no_mask"]
-    colors = [cmap(i) for i in np.linspace(0, 1, len(class_labels))]
-    im = np.array(image)
-    height, width = 416, 416
 
-    # Create figure and axes
-    fig, ax = plt.subplots(1)
-    # Display the image
-    ax.imshow(im)
 
-    # box[0] is x midpoint, box[2] is width
-    # box[1] is y midpoint, box[3] is height
-
-    # Create a Rectangle patch
-    for box in boxes:
-        assert len(box) == 6, "box should contain class pred, confidence, x, y, width, height"
-        class_pred = box[0]
-        box = box[2:]
-        upper_left_x = box[0] - box[2] / 2
-        upper_left_y = box[1] - box[3] / 2
-        rect = patches.Rectangle(
-            (upper_left_x * width, upper_left_y * height),
-            box[2] * width,
-            box[3] * height,
-            linewidth=2,
-            edgecolor=colors[int(class_pred)],
-            facecolor="none",
-        )
-        # Add the patch to the Axes
-        ax.add_patch(rect)
-        plt.text(
-            upper_left_x * width,
-            upper_left_y * height,
-            s=class_labels[int(class_pred)],
-            color="white",
-            verticalalignment="top",
-            bbox={"color": colors[int(class_pred)], "pad": 0},
-        )
-
-    plt.show()
-    
-
-def NMS(prediction, conf_thres= 0.8, nms_thres = 0.25):        
-    box_temp=prediction.new(prediction.shape)
-    box_temp[:,:,0]=prediction[:,:,0]-prediction[:,:,2]/2
-    box_temp[:,:,1]=prediction[:,:,1]-prediction[:,:,3]/2
-    box_temp[:,:,2]=prediction[:,:,0]+prediction[:,:,2]/2
-    box_temp[:,:,3]=prediction[:,:,1]+prediction[:,:,3]/2
-    prediction[:,:,:4]=box_temp[:,:,:4]
-    
-    output = [None for _ in range(len(prediction))]
-    
-    for index, pred in enumerate(prediction):
-        cls_conf, cls_pred = torch.max(pred[:,5:7], dim=1, keepdim=True)
-        score = pred[:,4]*cls_conf[:,0]
-        pred=pred[score>conf_thres] # squeeze?
-        
-        cls_conf=cls_conf[(score>conf_thres)]
-        cls_pred=cls_pred[(score>conf_thres)]
-        
-        if pred.size(0) == 0:
-            continue
-        
-        detection=torch.cat((pred[:,:5],cls_conf.float(),cls_pred.float()),dim=1) # 6 values (coordinates, class_conf and cls_pred)
-        
-        for cls in range(2):
-            is_cls = detection[:,-1]==cls
-            
-            detected_class = detection[is_cls]
-            
-            boxes = detected_class[:,:4]
-            score = detected_class[:,4]*detected_class[:,5]
-            
-            keep = nms(boxes, score, nms_thres)
-            
-            max_detection = detected_class[keep]
-            
-            output[index] = max_detection if output[index] is None else torch.cat((output[index], max_detection))
-            
-    return output      
 
 
 
@@ -190,7 +101,6 @@ def iou_width_height(boxes1, boxes2):
 
 def intersection_over_union(boxes_preds, boxes_labels):
     
-
 
     box1_x1 = boxes_preds[..., 0:1] - boxes_preds[..., 2:3] / 2
     box1_y1 = boxes_preds[..., 1:2] - boxes_preds[..., 3:4] / 2

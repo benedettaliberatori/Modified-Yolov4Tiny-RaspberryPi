@@ -1,6 +1,5 @@
 from CSP import AuxiliaryResBlock,ResBlockD,CSPBlock,ConvBlock
 import torch.nn as nn
-import torch.nn.functional as F
 import torch
 
 class backbone(nn.Module):

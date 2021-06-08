@@ -2,6 +2,7 @@ import cv2 as cv
 from yolo2 import Yolo
 import torch
 from torchvision import transforms
+import time
 
 if __name__ == "__main__":
 
@@ -20,20 +21,26 @@ if __name__ == "__main__":
     if not cap.isOpened():
         print("cannot open camera")
         exit()
-
+    
+    start = time.perf_counter()
+    count = 0
     while True:
         r, frame = cap.read()
         frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
         frame = cv.resize(frame, (416, 416))
         frame_tensor = transforms.ToTensor()(frame).unsqueeze_(0)
-
+        
+         
         frame = model.detect_Persson(frame, frame_tensor, scaled_anchors)
         frame = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
-
+        count += 1
         cv.imshow('detecter', frame)
-
+ 
         c = cv.waitKey(1)
         if c == 27:
             cap.release()
             cv.destroyAllWindows()
             break
+    
+    end = time.perf_counter()
+    print(count/(end-start))
