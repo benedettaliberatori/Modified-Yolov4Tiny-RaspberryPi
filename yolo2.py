@@ -123,9 +123,10 @@ class Yolo(object):
             for box in boxes:
                 if box[0] == 0: # mask
                         color = (0,250,154)
+                        label = 'mask'
                 else: # no mask
                         color = (255, 0, 0)
-                        
+                        label = 'no mask'
                 height, width = 416, 416
 
                 box = box[2:]
@@ -136,7 +137,7 @@ class Yolo(object):
                 #print(p1)
                 
                 CV2_frame = cv2.rectangle(CV2_frame, p0, p1, color, thickness=2)
-                
+                cv2.putText(CV2_frame, label + "{:.2f}".format(box[1]*100) + '%', (int((box[0] - box[2]/2)*height), int((box[1] - box[3]/2)*width)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
             return CV2_frame           
 
 
