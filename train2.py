@@ -1,6 +1,6 @@
 import torch
 import torch.optim as optim
-from yolo2 import Yolo
+from yolo import Yolo
 from loss import Loss
 from utils2 import  AverageMeter,class_accuracy, use_gpu_if_possible
 from dataset import get_data
@@ -149,7 +149,7 @@ def load_checkpoint(model, optmizer, load_path):
 if __name__ == "__main__":
 
     num_anchor = 6
-    model = Yolo()
+    model = Yolo(3, num_anchor //2, 2)
     optimizer_SGD = optim.SGD(
         model.parameters(), lr=0.001, weight_decay=0.0005
     )
