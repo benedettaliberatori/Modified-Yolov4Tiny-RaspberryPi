@@ -1,10 +1,8 @@
-from re import M
 import torch
 import torch.optim as optim
-import os
-from yolo import Yolo
+from yolo2 import Yolo
 from loss import Loss
-from utils import  AverageMeter,class_accuracy
+from utils2 import  AverageMeter,class_accuracy
 from dataset import get_data
 import warnings
 import time
