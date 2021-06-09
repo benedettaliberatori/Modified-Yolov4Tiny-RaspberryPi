@@ -93,11 +93,11 @@ class Yolo(object):
     def generate(self):
         self.net=Yolo_Block(3,3,2).eval()
         
-        model_dict=torch.load("model_100_epochs.pt", map_location = use_gpu_if_possible())
+        model_dict=torch.load("model_newdata.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
         
 
-    def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .8, tresh = .7 ):
+    def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .5, tresh = .8 ):
                        
         with torch.no_grad():
 
