@@ -156,9 +156,9 @@ if __name__ == "__main__":
     optimizer_RMS = optim.RMSprop(model.parameters(), lr=0.001, weight_decay=0.0005)
     loss_fn = Loss()
     S=[13, 26]
-    num_epochs = 200
+    num_epochs = 100
 #
-    ANCHORS = [[(0.289062, 0.339265), (0.02 ,  0.035), (0.007 ,   0.012   )], [(0.035 , 0.064  ), (0.012 ,0.021), (0.08  , 0.129  )]]
+    ANCHORS = [[(0.276  , 0.320312), (0.068  ,  0.113281), (0.03   ,  0.056    )], [(0.017 ,   0.03  ), (0.01 ,  0.018  ), (0.006  , 0.01 )]]
 #
     train_loader, test_loader = get_data('train.csv','test.csv')
 #
