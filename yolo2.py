@@ -97,7 +97,7 @@ class Yolo(object):
         self.net.load_state_dict(model_dict)
         
 
-    def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .5, tresh = .7 ):
+    def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .1, tresh = .75 ):
                        
         with torch.no_grad():
 
