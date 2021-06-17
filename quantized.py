@@ -82,6 +82,13 @@ class Yolo_Q(nn.Module):
 
         out = f2.reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),f1.reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
         return out
+    
+    def fuse_model(self):
+        for m in self.modules():
+            if type(m) == ConvBlock:
+                torch.quantization.fuse_modules(m, ['conv', 'bn'], inplace=True)
+
+
 def load_model(model_file):
     model = Yolo_Q(3,3,2)
     state_dict = torch.load(model_file, map_location=torch.device('cpu'))
@@ -105,7 +112,11 @@ def evaluate(model, data_loader, neval_batches):
             if cnt >= neval_batches:
                  return top1, top5
 
-    
+
+            
+            
+
+
 
 if __name__ == '__main__':
     
@@ -116,6 +127,8 @@ if __name__ == '__main__':
     print_size_of_model(model)
     model.eval()
     
+    model.fuse_model()
+
     # Specify quantization configuration
     # Start with simple min/max range estimation and per-tensor quantization of weights
     model.qconfig = torch.quantization.get_default_qconfig('qnnpack')
@@ -152,4 +165,4 @@ if __name__ == '__main__':
 
     test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cpu')
 
-    torch.jit.save(torch.jit.script(model), path = "models/quantized.pt" )
+    torch.jit.save(torch.jit.script(model), "models/quantized.pt" )
