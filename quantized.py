@@ -118,8 +118,8 @@ if __name__ == '__main__':
     
     # Specify quantization configuration
     # Start with simple min/max range estimation and per-tensor quantization of weights
-    model.qconfig = torch.quantization.default_qconfig
-    
+    model.qconfig = torch.quantization.get_default_qconfig('qnnpack')
+
     print(model.qconfig)
     torch.quantization.prepare(model, inplace=True)
 
@@ -152,4 +152,4 @@ if __name__ == '__main__':
 
     test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cpu')
 
-    torch.jit.save(torch.jit.script(model), path = F"{model_save_name}" )
+    torch.jit.save(torch.jit.script(model), path = "models/quantized.pt" )
