@@ -127,7 +127,7 @@ if __name__ == '__main__':
     print_size_of_model(model)
     model.eval()
     
-    model.fuse_model()
+    #model.fuse_model()
 
     # Specify quantization configuration
     # Start with simple min/max range estimation and per-tensor quantization of weights
