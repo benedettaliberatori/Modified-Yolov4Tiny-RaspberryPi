@@ -1,4 +1,4 @@
-from CSP import AuxiliaryResBlock,ResBlockD,CSPBlock,ConvBlock
+from CSP_quant import AuxiliaryResBlock,ResBlockD,CSPBlock,ConvBlock
 import torch.nn as nn
 import torch
 
