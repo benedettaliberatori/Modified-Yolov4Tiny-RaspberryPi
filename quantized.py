@@ -1,5 +1,5 @@
 from utils2 import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
-from backbone import backbone
+from backbone_quant import backbone
 from CSP import ConvBlock
 import torch.nn as nn
 import torch
@@ -9,6 +9,7 @@ from loss import Loss
 from utils2 import  AverageMeter, class_accuracy
 from dataset import get_data
 import torch.optim as optim
+import numpy as np
 
 # # Setup warnings
 import warnings
@@ -75,11 +76,15 @@ class Yolo_Q(nn.Module):
         feat1 = self.conv2(feat1)
         feat1 = self.conv4(feat1)
         feat2 = self.conv5(feat2)
-        feat2 = self.head(feat2).reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),self.head(feat1).reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
-        return self.dequant(feat2)
+
+        f2 = self.dequant(self.head(feat2))
+        f1 = self.dequant(self.head(feat1))
+
+        out = f2.reshape(feat2.shape[0], self.B, 2 + 5, feat2.shape[2], feat2.shape[3]).permute(0, 1, 3, 4, 2),f1.reshape(feat1.shape[0], self.B, 2 + 5, feat1.shape[2], feat1.shape[3]).permute(0, 1, 3, 4, 2)
+        return out
 def load_model(model_file):
     model = Yolo_Q(3,3,2)
-    state_dict = torch.load(model_file)
+    state_dict = torch.load(model_file, map_location=torch.device('cpu'))
     model.load_state_dict(state_dict)
     model.to('cpu')
     return model
