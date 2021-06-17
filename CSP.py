@@ -69,19 +69,26 @@ class ChannelAttention(nn.Module):
                                nn.ReLU(),
                                nn.Linear(in_channels // ratio, in_channels, bias=False))
         self.sigmoid = nn.Sigmoid()
-    def forward(self, x):
-        avg = self.avg_pool(x)
-        avg = avg.view(-1,1*1*self.in_channels)
 
+        self.quant = torch.quantization.QuantStub()
+        self.dequant = torch.quantization.DeQuantStub()
+
+    def forward(self, x):
+        x = self.dequant(x)
+        print(f"Print shape{x.shape}")
+        avg = self.avg_pool(x)
+        print(f"after pooling{avg.shape}")
+        avg = avg.view(-1,1*1*self.in_channels)
+        
         avg_out = self.fc(avg)
         max = self.max_pool(x)
-        max = avg.view(-1,1*1*self.in_channels)
+        max = max.view(-1,1*1*self.in_channels)
         
         max_out = self.fc(max)
         avg_out = avg_out.view(x.shape[0],self.in_channels,1,1)
-        max_out = avg_out.view(x.shape[0],self.in_channels,1,1)
+        max_out = max_out.view(x.shape[0],self.in_channels,1,1)
         out = avg_out + max_out
-        return self.sigmoid(out)
+        return self.quant(self.sigmoid(out))
     
 
 class SpatialAttention(nn.Module):
