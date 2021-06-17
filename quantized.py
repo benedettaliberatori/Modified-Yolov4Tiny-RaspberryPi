@@ -92,7 +92,7 @@ def print_size_of_model(model):
 
 if __name__ == '__main__':
 
-    model = load_model("model_newdata.pt")
+    model = load_model("model_newdata.pt").to('cpu')
     print_size_of_model(model)
     model.eval()
     
