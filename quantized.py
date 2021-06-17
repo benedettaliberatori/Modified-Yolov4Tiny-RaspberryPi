@@ -94,9 +94,24 @@ def print_size_of_model(model):
     print('Size (MB):', os.path.getsize("temp.p")/1e6)
     os.remove('temp.p')
 
+def evaluate(model, data_loader, neval_batches):
+    model.eval()
+    
+    cnt = 0
+    with torch.no_grad():
+        for image, target in data_loader:
+            output = model(image)
+            
+            if cnt >= neval_batches:
+                 return top1, top5
+
+    
 
 if __name__ == '__main__':
-
+    
+    num_calibration_batches = 32
+    train_loader, test_loader = get_data('train.csv','test.csv')
+    print("loaded data")
     model = load_model("model_newdata.pt").to('cpu')
     print_size_of_model(model)
     model.eval()
@@ -108,8 +123,10 @@ if __name__ == '__main__':
     print(model.qconfig)
     torch.quantization.prepare(model, inplace=True)
 
-    randinput = torch.randn(1, 3, 416, 416)
-    model(randinput)
+    #randinput = torch.randn(1, 3, 416, 416)
+    #model(randinput)
+    evaluate(model, train_loader, neval_batches=num_calibration_batches)
+
     # Convert to quantized model
     torch.quantization.convert(model, inplace=True)
     print('Post Training Quantization: Convert done')
@@ -117,7 +134,7 @@ if __name__ == '__main__':
     print("Size of model after quantization")
     print_size_of_model(model)
 
-    train_loader, test_loader = get_data('train.csv','test.csv')
+    
     S=[13, 26]
     ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
                [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
@@ -134,3 +151,5 @@ if __name__ == '__main__':
 
 
     test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cpu')
+
+    torch.jit.save(torch.jit.script(model), path = F"{model_save_name}" )
