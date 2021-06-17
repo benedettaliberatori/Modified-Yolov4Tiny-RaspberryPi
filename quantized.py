@@ -86,7 +86,7 @@ class Yolo_Q(nn.Module):
     def fuse_model(self):
         for m in self.modules():
             if type(m) == ConvBlock:
-                torch.quantization.fuse_modules(m, ['conv', 'bn'], inplace=True)
+                torch.quantization.fuse_modules(m, [['conv', 'bn']], inplace=True)
 
 
 def load_model(model_file):
