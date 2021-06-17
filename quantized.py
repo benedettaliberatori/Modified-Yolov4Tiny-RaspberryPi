@@ -1,6 +1,6 @@
 from utils2 import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
 from backbone_quant import backbone
-from CSP import ConvBlock
+from CSP_quant import ConvBlock
 import torch.nn as nn
 import torch
 from train2 import test_model 

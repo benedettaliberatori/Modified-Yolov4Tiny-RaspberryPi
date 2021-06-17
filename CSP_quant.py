@@ -72,6 +72,7 @@ class ChannelAttention(nn.Module):
 
         self.quant = torch.quantization.QuantStub()
         self.dequant = torch.quantization.DeQuantStub()
+        self.ff = torch.nn.quantized.FloatFunctional()
     def forward(self, x):
         x = self.dequant(x)
         avg = self.avg_pool(x)
@@ -83,8 +84,10 @@ class ChannelAttention(nn.Module):
 
         max = self.max_pool(x)
         max = max.view(-1,1*1*self.in_channels)
+
+        max = self.quant(max)
         
-        max_out = self.fc(max)
+        max_out = self.dequant(self.fc(max))
         avg_out = avg_out.view(x.shape[0],self.in_channels,1,1)
         max_out = max_out.view(x.shape[0],self.in_channels,1,1)
         out = avg_out + max_out
