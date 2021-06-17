@@ -82,11 +82,11 @@ class ChannelAttention(nn.Module):
         avg_out = self.dequant(avg_out)
 
         max = self.max_pool(x)
-        max = avg.view(-1,1*1*self.in_channels)
+        max = max.view(-1,1*1*self.in_channels)
         
         max_out = self.fc(max)
         avg_out = avg_out.view(x.shape[0],self.in_channels,1,1)
-        max_out = avg_out.view(x.shape[0],self.in_channels,1,1)
+        max_out = max_out.view(x.shape[0],self.in_channels,1,1)
         out = avg_out + max_out
         return self.quant(self.sigmoid(out))
     
