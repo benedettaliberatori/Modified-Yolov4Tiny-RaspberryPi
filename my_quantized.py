@@ -118,7 +118,7 @@ class Yolo_Q(object):
         num_calibration_batches = 32
         train_loader, test_loader = get_data('train.csv','test.csv')
 
-        self.net= load_model("model_newdata.pt")
+        self.net= load_model("model_RAdam.pt")
 
         self.net.qconfig = torch.quantization.get_default_qconfig('qnnpack')
         torch.quantization.prepare(self.net, inplace=True)

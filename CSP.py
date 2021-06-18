@@ -75,9 +75,7 @@ class ChannelAttention(nn.Module):
 
     def forward(self, x):
         x = self.dequant(x)
-        print(f"Print shape{x.shape}")
         avg = self.avg_pool(x)
-        print(f"after pooling{avg.shape}")
         avg = avg.view(-1,1*1*self.in_channels)
         
         avg_out = self.fc(avg)
