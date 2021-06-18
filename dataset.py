@@ -101,7 +101,7 @@ def get_data(train_csv_path, test_csv_path):
     
 
     IMAGE_SIZE = 416
-    BATCH_SIZE = 1
+    BATCH_SIZE = 32
     NUM_WORKERS = 4
     DATASET = 'dataset'
     IMG_DIR = DATASET + "/images/"
