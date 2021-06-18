@@ -8,6 +8,7 @@ import warnings
 import time
 import sys
 import math
+from torch.optim.optimizer import Optimizer
 warnings.filterwarnings("ignore")
 
 class RAdam(Optimizer):
