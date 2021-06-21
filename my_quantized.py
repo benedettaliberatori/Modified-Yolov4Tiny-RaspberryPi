@@ -7,7 +7,7 @@ import torch
 import os
 from loss import Loss
 from utils2 import  AverageMeter, class_accuracy
-from dataset import get_data
+#from dataset import get_data
 import torch.optim as optim
 import numpy as np
 import cv2
@@ -115,8 +115,8 @@ class Yolo_Q(object):
         self.generate()
     
     def generate(self):
-        num_calibration_batches = 32
-        train_loader, test_loader = get_data('train.csv','test.csv')
+        #num_calibration_batches = 32
+        #train_loader, test_loader = get_data('train.csv','test.csv')
 
         self.net = torch.jit.load("pruned.pth")
         #self.net= load_model("pruned_RAdam_10.pt")
