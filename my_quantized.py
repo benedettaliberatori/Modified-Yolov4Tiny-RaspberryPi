@@ -118,20 +118,16 @@ class Yolo_Q(object):
         num_calibration_batches = 32
         train_loader, test_loader = get_data('train.csv','test.csv')
 
-        self.net = torch.jit.load("quantized.pth")
-        #self.net= load_model("model_RAdam.pt")
-
-        #self.net.qconfig = torch.quantization.get_default_qconfig('qnnpack')
-        #torch.quantization.prepare(self.net, inplace=True)
-
-        # randinput = torch.randn(1, 3, 416, 416)
-        # self.net(randinput)
-        #evaluate(self.net, train_loader, neval_batches=num_calibration_batches)
-
-        #torch.quantization.convert(self.net, inplace=True) 
-
+        #self.net = torch.jit.load("quantized.pth")
+        self.net= load_model("pruned_RAdam_10.pt")
+        self.net.qconfig = torch.quantization.get_default_qconfig('qnnpack')
+        torch.quantization.prepare(self.net, inplace=True)
+        randinput = torch.randn(1, 3, 416, 416)
+        self.net(randinput)
+        evaluate(self.net, train_loader, neval_batches=num_calibration_batches)
+        torch.quantization.convert(self.net, inplace=True) 
         #model_dict=torch.load("quantized_mod.pt")
-        #torch.jit.save(torch.jit.script(self.net), "quantized.pth")
+        torch.jit.save(torch.jit.script(self.net), "pruned.pth")
     
         
 
