@@ -3,7 +3,7 @@ from backbone_quant import backbone
 from CSP_quant import ConvBlock
 import torch.nn as nn
 import torch
-from train2 import test_model 
+#from train2 import test_model 
 import os
 from loss import Loss
 from utils2 import  AverageMeter, class_accuracy
