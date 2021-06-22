@@ -93,11 +93,11 @@ class Yolo(object):
     def generate(self):
         self.net=Yolo_Block(3,3,2).eval()
         
-        model_dict=torch.load("pruned_RAdam_5.pt", map_location = use_gpu_if_possible())
+        model_dict=torch.load("model_RAdam_Augmented.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
         
 
-    def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .3, tresh = .65 ):
+    def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .1, tresh = .65 ):
                        
         with torch.no_grad():
 
@@ -122,6 +122,7 @@ class Yolo(object):
                         label = 'no mask'
                 height, width = 416, 416
 
+                p = box[1]
                 box = box[2:]
                 p0 = (int((box[0] - box[2]/2)*height) ,int((box[1] - box[3]/2)*width))
                 p1 = (int((box[0] + box[2]/2)*height) ,int((box[1] + box[3]/2)*width))
@@ -130,7 +131,7 @@ class Yolo(object):
                 #print(p1)
                 
                 CV2_frame = cv2.rectangle(CV2_frame, p0, p1, color, thickness=2)
-                cv2.putText(CV2_frame, label + "{:.2f}".format(box[1]*100) + '%', (int((box[0] - box[2]/2)*height), int((box[1] - box[3]/2)*width)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+                cv2.putText(CV2_frame, label + "{:.2f}".format(p*100) + '%', (int((box[0] - box[2]/2)*height), int((box[1] - box[3]/2)*width)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
             return CV2_frame           
 
 
