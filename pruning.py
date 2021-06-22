@@ -46,7 +46,7 @@ def pct_of_ones_in_mask(mask):
 if __name__ == "__main__":
 
             
-    train_loader, test_loader = get_data('train.csv','test.csv')
+    train_loader= get_data('train.csv')
     
     
     num_anchor = 6
