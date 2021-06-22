@@ -85,3 +85,12 @@ if __name__ == "__main__":
 
 
     torch.save(model.state_dict(), f"pruned_RAdam_{num_epochs}.pt")
+
+    model_LTH = Yolo(3,3,2)
+    model_LTH.load_state_dict(torch.load("untrained.pt"))
+
+    apply_mask(model_LTH, mask)
+
+    torch.save(model_LTH.state_dict(), f"LTH.pt")
+
+
