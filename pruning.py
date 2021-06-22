@@ -51,7 +51,7 @@ if __name__ == "__main__":
     
     num_anchor = 6
     model = Yolo(3, num_anchor //2, 2)
-    model.load_state_dict(torch.load('model_RAdam.pt'))
+    model.load_state_dict(torch.load('model_RAdam_Augmented.pt'))
     S=[13, 26]
     
     ANCHORS = [[(0.276  , 0.320312), (0.068  ,  0.113281), (0.03   ,  0.056    )], [(0.017 ,   0.03  ), (0.01 ,  0.018  ), (0.006  , 0.01 )]]
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     apply_mask(model, mask)
     train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, scaled_anchors, None, performance=class_accuracy, epoch_start_scheduler=1)
 
-    for i in range(5):
+    for i in range(20):
         
         print(f"Step {i+1}")
         model.to("cpu")        
