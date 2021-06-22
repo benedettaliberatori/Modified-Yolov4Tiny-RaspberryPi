@@ -63,6 +63,7 @@ class Yolo(nn.Module):
     
            
     def __init__(self,in_channels,B,num_classes):
+        torch.manual_seed(1)
         super().__init__()
         self.back = backbone(in_channels)
         self.conv1 = ConvBlock(512,512,3,1)
