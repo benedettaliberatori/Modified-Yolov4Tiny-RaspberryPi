@@ -129,7 +129,7 @@ def get_data(train_csv_path, test_csv_path):
         A.Normalize(mean=[0., 0., 0.], std=[1., 1., 1.], max_pixel_value=255,),
         ToTensorV2(),
     ],
-    bbox_params=A.BboxParams(format="yolo", min_visibility=0.4, label_fields=[],),
+    bbox_params=A.BboxParams(format="yolo", min_visibility=0.4, label_fields=[]),
     
     )
 
