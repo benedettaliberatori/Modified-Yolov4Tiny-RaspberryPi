@@ -74,7 +74,7 @@ class YOLODataset(Dataset):
         # Below assumes 3 scale predictions (as paper) and same num of anchors per scale
         targets = [torch.zeros((self.num_anchors // 2, S, S, 6))
                    for S in self.S]
-        for box in bboxes:
+        for box in bboxes2:
             iou_anchors = iou_width_height(torch.tensor(box[2:4]), self.anchors)
             anchor_indices = iou_anchors.argsort(descending=True, dim=0)
             x, y, width, height, class_label = box
