@@ -114,19 +114,19 @@ def get_data(train_csv_path, test_csv_path):
     [
         A.LongestMaxSize(max_size=IMAGE_SIZE),
         A.PadIfNeeded(
-            min_height=IMAGE_SIZE, min_width=IMAGE_SIZE, border_mode=cv2.BORDER_CONSTANT
+            min_height=IMAGE_SIZE, min_width=IMAGE_SIZE, border_mode=0
         ),
         A.OneOf(
             [
                 A.ShiftScaleRotate( # Randomly apply affine transforms: translate, scale and rotate the input.
-                    rotate_limit=20, p=0.5, border_mode=cv2.BORDER_CONSTANT
+                    rotate_limit=20, p=0.5, border_mode=0
                 ),
                 A.IAAAffine(shear=15, p=0.5, mode="constant"),
             ],
             p=1.0,
         ),
         A.HorizontalFlip(p=0.5),
-        A.Normalize(mean=[0, 0, 0], std=[1, 1, 1], max_pixel_value=255,),
+        A.Normalize(mean=[0., 0., 0.], std=[1., 1., 1.], max_pixel_value=255,),
         ToTensorV2(),
     ],
     bbox_params=A.BboxParams(format="yolo", min_visibility=0.4, label_fields=[],),
