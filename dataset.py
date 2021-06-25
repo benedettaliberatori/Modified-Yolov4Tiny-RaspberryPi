@@ -120,8 +120,8 @@ def get_data(train_csv_path, test_csv_path):
             [
                 A.ShiftScaleRotate( # Randomly apply affine transforms: translate, scale and rotate the input.
                     rotate_limit=20, p=0.5, border_mode=0
-                ),
-                A.IAAAffine(shear=15, p=0.5, mode="constant"),
+                )
+                #A.IAAAffine(shear=15, p=0.5, mode="constant"),
             ],
             p=1.0,
         ),
