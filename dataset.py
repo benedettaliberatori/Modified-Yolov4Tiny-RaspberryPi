@@ -56,7 +56,7 @@ class YOLODataset(Dataset):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         bboxes = []
         for box in bboxes2:
-            bboxes.append(box[:4])
+            bboxes.append(box[:4]-0.00001)
 
 
 
