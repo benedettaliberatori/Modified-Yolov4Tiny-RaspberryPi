@@ -49,17 +49,26 @@ class YOLODataset(Dataset):
     def __getitem__(self, index):
         label_path = os.path.join(
             self.label_dir, self.annotations.iloc[index, 1])
-        bboxes = np.roll(np.loadtxt(fname=label_path,
+        bboxes2 = np.roll(np.loadtxt(fname=label_path,
                                     delimiter=" ", ndmin=2), 4, axis=1).tolist()
         img_path = os.path.join(self.img_dir, self.annotations.iloc[index, 0])
         image = cv2.imread(img_path) 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        bboxes = []
+        for box in bboxes2:
+            bboxes.append(box[:4])
+
+
 
         # apply augmentations with albumentations
         if self.transform:
             augmentations = self.transform(image=image, bboxes=bboxes)
             image = augmentations["image"]
             bboxes = augmentations["bboxes"]
+        i = 0
+        for box in bboxes:
+            bboxes2[i][:4] = box
+            i = i+1
 
         # Building the targets below:
         # Below assumes 3 scale predictions (as paper) and same num of anchors per scale
