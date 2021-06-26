@@ -49,23 +49,11 @@ class YOLODataset(Dataset):
     def __getitem__(self, index):
         label_path = os.path.join(
             self.label_dir, self.annotations.iloc[index, 1])
-        bboxes2 = np.roll(np.loadtxt(fname=label_path,
+        bboxes = np.roll(np.loadtxt(fname=label_path,
                                     delimiter=" ", ndmin=2), 4, axis=1).tolist()
         img_path = os.path.join(self.img_dir, self.annotations.iloc[index, 0])
         image = cv2.imread(img_path) 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        bboxes = []
-        for box in bboxes2:
-            if box[0] > 0.2:
-                box[0] = box[0] - 0.0000005
-            if box[1] > 0.2:
-                box[1] = box[1] - 0.0000005
-            if box[2] > 0.2:
-                box[2] = box[2] - 0.0000005
-            if box[3] > 0.2:
-                box[3] = box[3] - 0.0000005
-            bboxes.append(box[:4])
-
 
 
         # apply augmentations with albumentations
@@ -73,16 +61,12 @@ class YOLODataset(Dataset):
             augmentations = self.transform(image=image, bboxes=bboxes)
             image = augmentations["image"]
             bboxes = augmentations["bboxes"]
-        i = 0
-        for box in bboxes:
-            bboxes2[i][:4] = box
-            i = i+1
 
         # Building the targets below:
         # Below assumes 3 scale predictions (as paper) and same num of anchors per scale
         targets = [torch.zeros((self.num_anchors // 2, S, S, 6))
                    for S in self.S]
-        for box in bboxes2:
+        for box in bboxes:
             iou_anchors = iou_width_height(torch.tensor(box[2:4]), self.anchors)
             anchor_indices = iou_anchors.argsort(descending=True, dim=0)
             x, y, width, height, class_label = box
@@ -134,16 +118,16 @@ def get_data(train_csv_path, test_csv_path):
         A.PadIfNeeded(
             min_height=IMAGE_SIZE, min_width=IMAGE_SIZE, border_mode=0
         ),
-        #A.OneOf(
-        #    [
-        #        A.ShiftScaleRotate( # Randomly apply affine transforms: translate, scale and rotate the input.
-        #            rotate_limit=20, p=0.5, border_mode=0
-        #        )
-        #        #A.IAAAffine(shear=15, p=0.5, mode="constant"),
-        #    ],
-        #    p=1.0,
-        #),
-        #A.HorizontalFlip(p=0.5),
+        A.OneOf(
+            [
+                A.ShiftScaleRotate( # Randomly apply affine transforms: translate, scale and rotate the input.
+                    rotate_limit=20, p=0.5, border_mode=0
+                ),
+                A.Affine(shear=15, p=0.5),
+            ],
+            p=1.0,
+        ),
+        A.HorizontalFlip(p=0.5),
         A.Normalize(mean=[0., 0., 0.], std=[1., 1., 1.], max_pixel_value=255,),
         ToTensorV2(),
     ],
