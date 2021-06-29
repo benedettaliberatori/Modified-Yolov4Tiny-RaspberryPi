@@ -70,11 +70,9 @@ class ChannelAttention(nn.Module):
                                nn.Linear(in_channels // ratio, in_channels, bias=False))
         self.sigmoid = nn.Sigmoid()
 
-        self.quant = torch.quantization.QuantStub()
-        self.dequant = torch.quantization.DeQuantStub()
+        
 
     def forward(self, x):
-        x = self.dequant(x)
         avg = self.avg_pool(x)
         avg = avg.view(-1,1*1*self.in_channels)
         
@@ -86,7 +84,7 @@ class ChannelAttention(nn.Module):
         avg_out = avg_out.view(x.shape[0],self.in_channels,1,1)
         max_out = max_out.view(x.shape[0],self.in_channels,1,1)
         out = avg_out + max_out
-        return self.quant(self.sigmoid(out))
+        return self.sigmoid(out)
     
 
 class SpatialAttention(nn.Module):
@@ -127,11 +125,7 @@ class AuxiliaryResBlock(nn.Module):
 
 if __name__ == '__main__':
     x = torch.rand(1,128,104,104)
-    #model = ResBlockD(64,32)
-    #print(model(x).shape)
     
-    #model2 = ResBlockD(64,128)
-    #print(model2(x).shape)
     
     model3 = AuxiliaryResBlock(128)
     print(model3(x).shape)

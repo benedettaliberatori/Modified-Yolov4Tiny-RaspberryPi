@@ -95,6 +95,7 @@ class Yolo(object):
         
         model_dict=torch.load("model_RAdam_Augmented.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
+        #self.net= torch.load("pruned_untrained.pt")
         
 
     def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .1, tresh = .65 ):
@@ -102,6 +103,7 @@ class Yolo(object):
         with torch.no_grad():
 
             out = self.net(Tensor_frame)
+            print(out[0].shape)
             boxes = []
             
             for i in range(2):

@@ -71,16 +71,16 @@ if __name__ == "__main__":
     mask = magnitude_pruning(model, .2, params_to_prune=["0", "1"])
     print(pct_of_ones_in_mask(mask))
     apply_mask(model, mask)
-    train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, scaled_anchors, None, performance=class_accuracy, epoch_start_scheduler=1)
+    train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, scaled_anchors, "cuda:0", performance=class_accuracy, epoch_start_scheduler=1)
 
     for i in range(20):
         
         print(f"Step {i+1}")
-        model.to("cpu")        
+        model.to("cuda:0")        
         mask = magnitude_pruning(model, .2, params_to_prune=["0", "1"], mask=mask)
         print(pct_of_ones_in_mask(mask))
         apply_mask(model, mask)
-        train_model(train_loader, model, optimizer, loss_fn, num_epochs , scaler, scaled_anchors, None, performance=class_accuracy, epoch_start_scheduler=1)
+        train_model(train_loader, model, optimizer, loss_fn, num_epochs , scaler, scaled_anchors, "cuda:0", performance=class_accuracy, epoch_start_scheduler=1)
 
 
 
