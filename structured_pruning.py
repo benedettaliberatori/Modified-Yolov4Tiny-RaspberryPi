@@ -26,13 +26,13 @@ def prune_model(model):
     
     for m in model.modules():
         if isinstance( m, ConvBlock ):
-            prune_conv( m.conv, 0.3)
-        if isinstance( m, ResBlockD):
-            prune_conv(m.conv1, 0.3)
-            prune_conv(m.conv2, 0.3)
-            prune_conv(m.conv3, 0.3)
-            prune_conv(m.conv4, 0.3)
-
+            prune_conv( m.conv, 0.5)
+        #if isinstance( m, ResBlockD):
+        #    prune_conv(m.conv1, 0.3)
+        #    prune_conv(m.conv2, 0.3)
+        #    prune_conv(m.conv3, 0.3)
+        #    prune_conv(m.conv4, 0.3)
+        
             
     return model   
 
