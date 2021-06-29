@@ -69,7 +69,7 @@ if __name__ == '__main__':
     optimizer = RAdam(model.parameters(), lr=0.001/5, weight_decay=0.005)
 
     scaler = torch.cuda.amp.GradScaler()
-    train_model(train_loader, model, optimizer, loss_fn=Loss(), num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler=scheduler,epoch_start_scheduler= 40)
+    train_model(train_loader, model, optimizer, loss_fn=Loss(), num_epochs=100, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler=scheduler,epoch_start_scheduler= 40)
 
 
     sample_input = torch.rand((1,3,416, 416))
