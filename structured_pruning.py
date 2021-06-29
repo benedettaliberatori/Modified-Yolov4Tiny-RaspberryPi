@@ -9,7 +9,7 @@ from dataset import get_data
 from utils2 import class_accuracy
 import onnx 
 from onnx_tf.backend import prepare
-
+import tensorflow as tf
 
 
 def prune_model(model):
