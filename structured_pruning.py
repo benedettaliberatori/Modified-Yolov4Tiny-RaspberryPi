@@ -1,5 +1,5 @@
 import torch
-#import torch_pruning as tp
+import torch_pruning as tp
 from yolo2 import Yolo_Block
 from train2 import train_model, RAdam , test_model
 from CSP import ConvBlock, ResBlockD
