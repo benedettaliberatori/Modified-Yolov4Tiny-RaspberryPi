@@ -60,7 +60,6 @@ class YOLODataset(Dataset):
         if self.transform:
             augmentations = self.transform(image=image, bboxes=bboxes)
             image = augmentations["image"]
-            image = image - 0.2
             bboxes = augmentations["bboxes"]
 
         # Building the targets below:
