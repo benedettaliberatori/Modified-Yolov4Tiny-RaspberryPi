@@ -2,7 +2,7 @@ import torch
 import torch.optim as optim
 from yolo2 import Yolo, Yolo_Block
 from loss import Loss
-from utils2 import  mean_average_precision,get_evaluation_bboxes, use_gpu_if_possible
+from utils import  mean_average_precision,get_evaluation_bboxes, use_gpu_if_possible
 from dataset import get_data
 import warnings
 import time

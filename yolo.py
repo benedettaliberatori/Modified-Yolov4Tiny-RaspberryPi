@@ -4,7 +4,7 @@ from PIL import ImageDraw
 import torch.nn as nn
 import torch
 import numpy as np
-from utils2 import use_gpu_if_possible
+from utils import use_gpu_if_possible
 
 
 class DecodeBox(nn.Module):

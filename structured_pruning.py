@@ -1,12 +1,12 @@
 import torch
 import torch_pruning as tp
 from yolo2 import Yolo_Block
-from train2 import train_model, RAdam , test_model
+from train import train_model, RAdam , test_model
 from CSP import ConvBlock, ResBlockD
 import numpy as np
 from loss import Loss
 from dataset import get_data
-from utils2 import class_accuracy
+from utils import class_accuracy
 import onnx 
 from onnx_tf.backend import prepare
 import tensorflow as tf

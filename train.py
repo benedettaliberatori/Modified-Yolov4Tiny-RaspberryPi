@@ -2,7 +2,7 @@ import torch
 import torch.optim as optim
 from yolo import Yolo
 from loss import Loss
-from utils2 import  AverageMeter,class_accuracy, use_gpu_if_possible
+from utils import  AverageMeter,class_accuracy, use_gpu_if_possible
 from dataset import get_data
 import warnings
 import time
