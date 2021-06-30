@@ -16,7 +16,7 @@ if __name__ == '__main__':
     scaled_anchors = torch.tensor(ANCHORS) / (
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
 
-    interpreter = tf.lite.Interpreter('model.tflite')
+    interpreter = tf.lite.Interpreter('downblur.tflite')
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 boxes += cells_to_bboxes(out[i], S=out[i].shape[2], anchors = anchor)[0]
                 
             
-        boxes = non_max_suppression(boxes, iou_threshold= .1, threshold=.65, box_format = "midpoint")
+        boxes = non_max_suppression(boxes, iou_threshold= .3, threshold=.65, box_format = "midpoint")
         
         for box in boxes:
 
@@ -87,6 +87,12 @@ if __name__ == '__main__':
         fps = "FPS: " + fps
         cv.putText(frame, fps, (0, 30), font, 0.5, (255, 0, 0), 1, cv.LINE_AA)
         
+        p0 = (int((box[0] - box[2]/2)*height) ,int((box[1] - box[3]/2)*width))
+        p1 = (int((box[0] + box[2]/2)*height) ,int((box[1] + box[3]/2)*width))
+
+        CV2_frame = cv.rectangle(frame, p0, p1, color, thickness=2)
+        cv.putText(CV2_frame, label + "{:.2f}".format(p*100) + '%', (int((box[0] - box[2]/2)*height), int((box[1] - box[3]/2)*width)-10), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+
         cv.imshow('detecter', frame)
  
         c = cv.waitKey(1)
