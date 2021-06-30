@@ -12,29 +12,29 @@ from onnx_tf.backend import prepare
 import tensorflow as tf
 
 
-#def prune_model(model):
-#    model.cpu()
-#    DG = tp.DependencyGraph().build_dependency( model, torch.randn(1, 3, 416, 416) )
-#    def prune_conv(conv, amount=0.2):
-#        
-#        strategy = tp.strategy.L1Strategy() 
-#        pruning_index = strategy(conv.weight, amount=amount)
-#        plan = DG.get_pruning_plan(conv, tp.prune_conv, pruning_index)
-#        plan.exec()
-#    
-#    
-#    
-#    for m in model.modules():
-#        if isinstance( m, ConvBlock ):
-#            prune_conv( m.conv, 0.5)
-#        #if isinstance( m, ResBlockD):
-#        #    prune_conv(m.conv1, 0.3)
-#        #    prune_conv(m.conv2, 0.3)
-#        #    prune_conv(m.conv3, 0.3)
-#        #    prune_conv(m.conv4, 0.3)
-#        
-#            
-#    return model   
+def prune_model(model):
+    model.cpu()
+    DG = tp.DependencyGraph().build_dependency( model, torch.randn(1, 3, 416, 416) )
+    def prune_conv(conv, amount=0.2):
+        
+        strategy = tp.strategy.L1Strategy() 
+        pruning_index = strategy(conv.weight, amount=amount)
+        plan = DG.get_pruning_plan(conv, tp.prune_conv, pruning_index)
+        plan.exec()
+    
+    
+    
+    for m in model.modules():
+        if isinstance( m, ConvBlock ):
+            prune_conv( m.conv, 0.5)
+        #if isinstance( m, ResBlockD):
+        #    prune_conv(m.conv1, 0.3)
+        #    prune_conv(m.conv2, 0.3)
+        #    prune_conv(m.conv3, 0.3)
+        #    prune_conv(m.conv4, 0.3)
+        
+            
+    return model   
 
 
 if __name__ == '__main__':
