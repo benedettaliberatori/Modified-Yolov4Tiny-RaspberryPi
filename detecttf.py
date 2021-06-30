@@ -74,6 +74,12 @@ if __name__ == '__main__':
             height, width = 416, 416
             p = box[1]
             box = box[2:]
+
+            p0 = (int((box[0] - box[2]/2)*height) ,int((box[1] - box[3]/2)*width))
+            p1 = (int((box[0] + box[2]/2)*height) ,int((box[1] + box[3]/2)*width))
+    
+            CV2_frame = cv.rectangle(frame, p0, p1, color, thickness=2)
+            cv.putText(CV2_frame, label + "{:.2f}".format(p*100) + '%', (int((box[0] - box[2]/2)*height), int((box[1] - box[3]/2)*width)-10), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
             
 
 
@@ -87,11 +93,7 @@ if __name__ == '__main__':
         fps = "FPS: " + fps
         cv.putText(frame, fps, (0, 30), font, 0.5, (255, 0, 0), 1, cv.LINE_AA)
         
-        p0 = (int((box[0] - box[2]/2)*height) ,int((box[1] - box[3]/2)*width))
-        p1 = (int((box[0] + box[2]/2)*height) ,int((box[1] + box[3]/2)*width))
-
-        CV2_frame = cv.rectangle(frame, p0, p1, color, thickness=2)
-        cv.putText(CV2_frame, label + "{:.2f}".format(p*100) + '%', (int((box[0] - box[2]/2)*height), int((box[1] - box[3]/2)*width)-10), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+        
 
         cv.imshow('detecter', frame)
  
