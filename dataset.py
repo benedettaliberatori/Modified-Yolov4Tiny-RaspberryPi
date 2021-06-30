@@ -1,6 +1,5 @@
-"""
-Creates a Pytorch dataset to load the Pascal VOC & MS COCO datasets
-"""
+
+
 
 import numpy as np
 import os
