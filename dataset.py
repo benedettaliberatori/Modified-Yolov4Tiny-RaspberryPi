@@ -60,6 +60,7 @@ class YOLODataset(Dataset):
         if self.transform:
             augmentations = self.transform(image=image, bboxes=bboxes)
             image = augmentations["image"]
+            image = image - 0.2
             bboxes = augmentations["bboxes"]
 
         # Building the targets below:
@@ -129,9 +130,8 @@ def get_data(train_csv_path, test_csv_path):
         ),
         A.HorizontalFlip(p=0.5),
         A.Normalize(mean=[0., 0., 0.], std=[1., 1., 1.], max_pixel_value=255,),
-        A.RandomBrightnessContrast (brightness_limit=0.2, contrast_limit=0.2, brightness_by_max=True, always_apply=False, p=0.5),
-        A.Downscale (scale_min=0.25, scale_max=0.25, interpolation=0, always_apply=False, p=0.7),
-        A.Blur (blur_limit=7, always_apply=False, p=0.5),
+        A.Downscale (scale_min=0.25, scale_max=0.25, interpolation=0, always_apply=True, p=1),
+        A.MotionBlur(p=1),
 
         ToTensorV2(),
     ],
