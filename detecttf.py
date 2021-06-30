@@ -1,6 +1,6 @@
 import cv2 as cv
 import time
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 import torch
@@ -103,8 +103,8 @@ if __name__ == '__main__':
             cv.destroyAllWindows()
             break
     
-    plt.plot(history_fps)
-    plt.ylabel("FPS")
-    plt.show()
+    #plt.plot(history_fps)
+    #plt.ylabel("FPS")
+    #plt.show()
     end = time.perf_counter()
     print(count/(end-start))
