@@ -16,7 +16,7 @@ if __name__ == '__main__':
     scaled_anchors = torch.tensor(ANCHORS) / (
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
 
-    interpreter = tf.lite.Interpreter('downblur.tflite')
+    interpreter = tf.lite.Interpreter('pruneddb.tflite')
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()
