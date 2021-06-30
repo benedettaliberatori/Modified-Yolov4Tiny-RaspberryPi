@@ -72,7 +72,7 @@ if __name__ == '__main__':
     train_model(train_loader, model, optimizer, Loss(), num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler= None,epoch_start_scheduler= 40)
 
 
-    sample_input = torch.rand((1,3,416, 416))
+    sample_input = torch.rand((1,3,416, 416)).to("cuda:0")
     torch.onnx.export(
     model,                  # PyTorch Model
     sample_input,                    # Input tensor
