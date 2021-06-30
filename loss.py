@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from utils2 import intersection_over_union
+from utils import intersection_over_union
 
 class Loss(nn.Module):
     def __init__(self):

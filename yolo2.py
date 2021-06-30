@@ -1,4 +1,4 @@
-from utils2 import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
+from utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
 from backbone import backbone
 from CSP import ConvBlock
 import torch.nn as nn

@@ -5,7 +5,7 @@ import tensorflow as tf
 import numpy as np
 import torch
 from torchvision import transforms
-from utils2 import cells_to_bboxes, non_max_suppression
+from utils import cells_to_bboxes, non_max_suppression
 
 if __name__ == '__main__':
     print("Started")
