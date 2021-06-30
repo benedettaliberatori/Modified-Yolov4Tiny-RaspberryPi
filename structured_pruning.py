@@ -53,42 +53,42 @@ if __name__ == '__main__':
     loss_fn = Loss()
 
 
-    #model = Yolo_Block(3,3,2)
-    #model.load_state_dict(torch.load('model_RAdam_Augmented.pt'))
-#
-    #params = sum([np.prod(p.size()) for p in model.parameters()])
-    #print("Number of Parameters: %.1fM"%(params/1e6))
-    #test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device=None)
-#
-    #prune_model(model)
-    #params = sum([np.prod(p.size()) for p in model.parameters()])
-    #print("Number of Parameters: %.1fM"%(params/1e6))
-    #test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device=None)
-#
-#
-    #optimizer = RAdam(model.parameters(), lr=0.001/5, weight_decay=0.005)
-    #num_epochs = 100
-    #scaler = torch.cuda.amp.GradScaler()
-    #train_model(train_loader, model, optimizer, Loss(), num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler= None,epoch_start_scheduler= 40)
-#
-#
-    #sample_input = torch.rand((1,3,416, 416))
-    #torch.onnx.export(
-    #model,                  # PyTorch Model
-    #sample_input,                    # Input tensor
-    #'onnx_model.onnx',        # Output file (eg. 'output_model.onnx')
-    #opset_version=12,       # Operator support version
-    #input_names=['input'] ,  # Input tensor name (arbitary)
-    #output_names=['output1', 'output2'] )
-#
-    #model = onnx.load("onnx_model.onnx")
-#
-    #tf_rep = prepare(model)
-    #tf_rep.export_graph('model_tf')
-#
-    converter = tf.lite.TFLiteConverter.from_saved_model('model_tf')
-    tflite_model = converter.convert()
-    with open('model1.tflite', 'wb') as f:
-        f.write(tflite_model)
+    model = Yolo_Block(3,3,2)
+    model.load_state_dict(torch.load('downblur.pt'))
+
+    params = sum([np.prod(p.size()) for p in model.parameters()])
+    print("Number of Parameters: %.1fM"%(params/1e6))
+    test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device=None)
+
+    prune_model(model)
+    params = sum([np.prod(p.size()) for p in model.parameters()])
+    print("Number of Parameters: %.1fM"%(params/1e6))
+    test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device=None)
+
+
+    optimizer = RAdam(model.parameters(), lr=0.001/5, weight_decay=0.005)
+    num_epochs = 100
+    scaler = torch.cuda.amp.GradScaler()
+    train_model(train_loader, model, optimizer, Loss(), num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler= None,epoch_start_scheduler= 40)
+
+
+    sample_input = torch.rand((1,3,416, 416))
+    torch.onnx.export(
+    model,                  # PyTorch Model
+    sample_input,                    # Input tensor
+    'onnx_model.onnx',        # Output file (eg. 'output_model.onnx')
+    opset_version=12,       # Operator support version
+    input_names=['input'] ,  # Input tensor name (arbitary)
+    output_names=['output1', 'output2'] )
+
+    model = onnx.load("onnx_model.onnx")
+
+    tf_rep = prepare(model)
+    tf_rep.export_graph('modeldb_tf')
+
+    #converter = tf.lite.TFLiteConverter.from_saved_model('model_tf')
+    #tflite_model = converter.convert()
+    #with open('prunded.tflite', 'wb') as f:
+    #    f.write(tflite_model)
 
     
