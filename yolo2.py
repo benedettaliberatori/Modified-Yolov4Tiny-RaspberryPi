@@ -6,54 +6,6 @@ import torch
 from torchvision import transforms
 import cv2
 
-#class DecodeBox(nn.Module):
-#
-#    def __init__(self, scaled_anchors, num_classes, img_size):
-#        super(DecodeBox, self).__init__()
-#        self.scaled_anchors = scaled_anchors
-#        self.num_anchors = len(scaled_anchors)
-#        self.num_classes = num_classes
-#        self.bbox_attrs = 5 + num_classes
-#        self.img_size = img_size
-#
-#    def forward(self,input):
-#
-#        batch_size = input.size(0)
-#        input_height = input.size(2)
-#        input_width = input.size(3)
-#        stride_h = self.img_size[1] / input_height
-#        stride_w = self.img_size[0] / input_width
-#
-#        prediction = input
-#
-#        x = torch.sigmoid(prediction[..., 0])
-#        y = torch.sigmoid(prediction[..., 1])
-#        w = prediction[..., 2]
-#        h = prediction[..., 3]
-#        conf = torch.sigmoid(prediction[..., 4])
-#        pred_cls = torch.sigmoid(prediction[..., 5:])
-#        FloatTensor = torch.FloatTensor
-#        LongTensor = torch.LongTensor
-#
-#        grid_x = torch.linspace(0, input_width - 1, input_width).repeat(input_height, 1).repeat(
-#            batch_size * self.num_anchors, 1, 1).view(x.shape).type(FloatTensor)
-#        grid_y = torch.linspace(0, input_height - 1, input_height).repeat(input_width, 1).t().repeat(
-#            batch_size * self.num_anchors, 1, 1).view(y.shape).type(FloatTensor)
-#        anchor_w = FloatTensor(self.scaled_anchors).index_select(1, LongTensor([0]))
-#        anchor_h = FloatTensor(self.scaled_anchors).index_select(1, LongTensor([1]))
-#        anchor_w = anchor_w.repeat(batch_size, 1).repeat(1, 1, input_height * input_width).view(w.shape)
-#        anchor_h = anchor_h.repeat(batch_size, 1).repeat(1, 1, input_height * input_width).view(h.shape)
-#        pred_boxes = FloatTensor(prediction[..., :4].shape)
-#
-#        pred_boxes[..., 0] = x.data + grid_x
-#        pred_boxes[..., 1] = y.data + grid_y
-#        pred_boxes[..., 2] = torch.exp(w.data) * anchor_w
-#        pred_boxes[..., 3] = torch.exp(h.data) * anchor_h
-#        scale = torch.Tensor([stride_w, stride_h] * 2).type(FloatTensor)
-#        output = torch.cat((pred_boxes.reshape(batch_size, -1, 4)*scale,
-#                            conf.reshape(batch_size, -1, 1), pred_cls.reshape(batch_size, -1, self.num_classes)), -1)
-#        return output.data
-#
 
 
 
