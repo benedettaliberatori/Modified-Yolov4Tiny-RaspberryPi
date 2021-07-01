@@ -2,7 +2,7 @@ import torch
 from yolo import Yolo
 from loss import Loss
 from utils import  AverageMeter, use_gpu_if_possible
-from dataset import get_data
+from pidataset import get_data
 import warnings
 import time
 import tensorflow as tf
@@ -25,8 +25,6 @@ def test_model(dataloader, device=None):
 
     with torch.no_grad():
         for X, y in dataloader:
-            X = X.numpy()
-            X = tf.convert_to_tensor(X)
             
             #y0, y1= (
             #y[0].to(device),
