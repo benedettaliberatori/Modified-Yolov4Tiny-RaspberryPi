@@ -22,6 +22,7 @@ def test_model(dataloader, device=None):
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()
+    time = 0
 
     with torch.no_grad():
         for X, y in dataloader:
@@ -30,11 +31,17 @@ def test_model(dataloader, device=None):
             #y[0].to(device),
             #y[1].to(device),
        # )
+            X = X.numpy()
+            X = tf.convert_to_tensor(X)
+            start = time.perf_counter()
             interpreter.set_tensor(input_details[0]['index'], X)
             interpreter.invoke()
             out = [0,0]
             out[1] = torch.from_numpy(interpreter.get_tensor(output_details[0]['index'])).float()
             out[0] = torch.from_numpy(interpreter.get_tensor(output_details[1]['index'])).float()
+
+            end = time.perf_counter()
+            time += (end-start)
         
             #loss = (
             #loss_fn(out[0], y0, scaled_anchors[0])
@@ -48,8 +55,8 @@ def test_model(dataloader, device=None):
     # get final performances
     #fin_loss = loss_meter.sum if loss_fn is not None else None
 
-    end = time.perf_counter()
-    print(1318/(end-start))
+
+    print(1318/(time))
 
     #return fin_loss
 

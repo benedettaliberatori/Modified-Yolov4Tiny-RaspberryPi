@@ -95,8 +95,7 @@ class YOLODataset(Dataset):
                 elif not anchor_taken and iou_anchors[anchor_idx] > self.ignore_iou_thresh:
                     targets[scale_idx][anchor_on_scale,
                                        i, j, 0] = -1  # ignore prediction
-        image = image.numpy()
-        image = tf.convert_to_tensor(image)
+    
 
         return image, tuple(targets)
 
