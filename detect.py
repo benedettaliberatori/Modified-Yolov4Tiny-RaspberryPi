@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     print("here")
 
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture('tg.mp4')
     
     if not cap.isOpened():
         print("cannot open camera")

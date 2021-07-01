@@ -45,7 +45,7 @@ class Yolo(object):
     def generate(self):
         self.net=Yolo_Block(3,3,2).eval()
         
-        model_dict=torch.load("model_RAdam_Augmented.pt", map_location = use_gpu_if_possible())
+        model_dict=torch.load("downblur.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
         #self.net= torch.load("pruned_untrained.pt")
         
