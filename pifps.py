@@ -11,7 +11,7 @@ warnings.filterwarnings("ignore")
 
 
 def test_model(dataloader, device=None):
-    start = time.perf_counter()
+
     #if loss_fn is not None:
     #    loss_meter = AverageMeter()
     
@@ -22,7 +22,7 @@ def test_model(dataloader, device=None):
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()
-    time = 0
+    t = 0
 
     with torch.no_grad():
         for X, y in dataloader:
@@ -41,7 +41,7 @@ def test_model(dataloader, device=None):
             out[0] = torch.from_numpy(interpreter.get_tensor(output_details[1]['index'])).float()
 
             end = time.perf_counter()
-            time += (end-start)
+            t += (end-start)
         
             #loss = (
             #loss_fn(out[0], y0, scaled_anchors[0])
@@ -56,7 +56,7 @@ def test_model(dataloader, device=None):
     #fin_loss = loss_meter.sum if loss_fn is not None else None
 
 
-    print(1318/(time))
+    print(1318/(t))
 
     #return fin_loss
 
