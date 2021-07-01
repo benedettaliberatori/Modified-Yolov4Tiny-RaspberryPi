@@ -55,7 +55,7 @@ class Yolo(object):
         with torch.no_grad():
 
             out = self.net(Tensor_frame)
-            print(out[0].shape)
+
             boxes = []
             
             for i in range(2):
