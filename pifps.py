@@ -23,9 +23,11 @@ def test_model(dataloader, device=None):
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()
     t = 0
-
+    i = 0
     with torch.no_grad():
         for X, y in dataloader:
+            print(i)
+            i+=1
             
             #y0, y1= (
             #y[0].to(device),
@@ -56,7 +58,7 @@ def test_model(dataloader, device=None):
     #fin_loss = loss_meter.sum if loss_fn is not None else None
 
 
-    print(1318/(t))
+    print(100/(t))
 
     #return fin_loss
 
