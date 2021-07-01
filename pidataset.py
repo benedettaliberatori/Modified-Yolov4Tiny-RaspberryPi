@@ -100,7 +100,7 @@ class YOLODataset(Dataset):
 
         return image, tuple(targets)
 
-def get_data(train_csv_path, test_csv_path):
+def get_data(test_csv_path):
     
 
     IMAGE_SIZE = 416
@@ -139,14 +139,6 @@ def get_data(train_csv_path, test_csv_path):
     
     )
 
-    train_dataset = YOLODataset(
-        train_csv_path,
-        transform=transforms,
-        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16],
-        img_dir=IMG_DIR,
-        label_dir=LABEL_DIR,
-        anchors=ANCHORS,
-    )
     test_dataset = YOLODataset(
         test_csv_path,
         transform=transforms,
@@ -155,14 +147,7 @@ def get_data(train_csv_path, test_csv_path):
         label_dir=LABEL_DIR,
         anchors=ANCHORS,
     )
-    train_loader = DataLoader(
-        dataset=train_dataset,
-        batch_size=BATCH_SIZE,
-        num_workers=NUM_WORKERS,
-        shuffle=True,
-        pin_memory=True,
-        
-    )
+    
     test_loader = DataLoader(
         dataset=test_dataset,
         batch_size=BATCH_SIZE,
@@ -174,7 +159,7 @@ def get_data(train_csv_path, test_csv_path):
 
     
 
-    return train_loader, test_loader
+    return test_loader
 
     
 
