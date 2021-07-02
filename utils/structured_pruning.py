@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
 
     model = Yolo_Block(3,3,2)
-    model.load_state_dict(torch.load('downblur.pt'))
+    model.load_state_dict(torch.load('models/downblur.pt'))
 
     params = sum([np.prod(p.size()) for p in model.parameters()])
     print("Number of Parameters: %.1fM"%(params/1e6))
