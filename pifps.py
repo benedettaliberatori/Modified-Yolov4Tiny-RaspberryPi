@@ -44,4 +44,4 @@ if __name__ == "__main__":
 
     test_loader = get_data('transform.csv')
 
-    test_model(test_loader, device=None)
+    test_model(test_loader)
