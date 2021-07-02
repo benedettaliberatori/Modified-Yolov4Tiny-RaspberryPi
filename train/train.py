@@ -4,8 +4,9 @@ import os
 import torch
 import torch.optim as optim
 from yolo.yolo import Yolo
-from utils.loss import Loss
-from utils.utils import  AverageMeter,class_accuracy, use_gpu_if_possible
+os.chdir("../utils")
+from loss import Loss
+from utils import  AverageMeter,class_accuracy, use_gpu_if_possible
 from dataset.dataset import get_data
 import warnings
 import time

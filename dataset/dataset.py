@@ -8,7 +8,7 @@ import torch
 
 from PIL import ImageFile
 from torch.utils.data import Dataset, DataLoader
-from utils.utils import iou_width_height 
+from utils import iou_width_height 
 
 import albumentations as A
 import cv2

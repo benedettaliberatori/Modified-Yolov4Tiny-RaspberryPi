@@ -2,14 +2,19 @@ import sys
 sys.path.append("..")
 
 import torch
-import torch_pruning as tp
+#import torch_pruning as tp
 from yolo.yolo2 import Yolo_Block
+import os
+
 from train.train import train_model, RAdam , test_model
 from yolo.CSP import ConvBlock, ResBlockD
 import numpy as np
-from utils.loss import Loss
-from utils.dataset import get_data
-from utils.utils import class_accuracy
+
+from loss import Loss
+
+from utils import class_accuracy
+sys.path.append("..")
+from dataset.dataset import get_data
 import onnx 
 from onnx_tf.backend import prepare
 import tensorflow as tf
@@ -37,8 +42,8 @@ def prune_model(model):
 
 
 if __name__ == '__main__':
-
-    train_loader, test_loader = get_data('train.csv','test.csv')
+    
+    train_loader, test_loader = get_data('../dataset/train.csv','../dataset/test.csv')
     S=[13, 26]
     ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
                [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]
@@ -53,7 +58,7 @@ if __name__ == '__main__':
 
 
     model = Yolo_Block(3,3,2)
-    model.load_state_dict(torch.load('models/downblur.pt'))
+    model.load_state_dict(torch.load('../models/downblur.pt'))
 
     params = sum([np.prod(p.size()) for p in model.parameters()])
     print("Number of Parameters: %.1fM"%(params/1e6))

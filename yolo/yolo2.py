@@ -1,7 +1,9 @@
 import sys 
 sys.path.append("..")
 import os
-from utils.utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
+os.chdir("../utils")
+from utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
+sys.path.append("..")
 from yolo.backbone import backbone
 from yolo.CSP import ConvBlock
 import torch.nn as nn
