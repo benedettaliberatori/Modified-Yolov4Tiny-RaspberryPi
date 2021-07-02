@@ -141,7 +141,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaler,  scaled_anchors
         )
 
         
-        #optimizer.zero_grad()
+        
         for param in model.parameters():
             param.grad = None
 
@@ -174,14 +174,14 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaler,  scaled_anchors
 
 def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, scaled_anchors,device, performance, lr_scheduler=None, epoch_start_scheduler=1):
     
-    #torch.backends.cudnn.benchmark = True
+    
     if device is None:
         device = use_gpu_if_possible()
     
     model = model.to(device)
     model.train()
 
-    # epoch loop
+    
     for epoch in range(num_epochs):
 
         loss_meter = AverageMeter()
@@ -189,7 +189,7 @@ def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, sca
         performance_meter_obj = AverageMeter()
         performance_meter_noobj = AverageMeter()
 
-        # added print for LR
+        
         print(f"Epoch {epoch+1} --- learning rate {optimizer.param_groups[0]['lr']:.5f}")
         
 
@@ -209,7 +209,7 @@ def train_model(train_loader, model, optimizer, loss_fn, num_epochs, scaler, sca
 
 
 def test_model(model, dataloader,scaled_anchors, performance=class_accuracy, loss_fn=None, device=None):
-    # create an AverageMeter for the loss if passed
+    
     if loss_fn is not None:
         loss_meter = AverageMeter()
     
@@ -226,7 +226,6 @@ def test_model(model, dataloader,scaled_anchors, performance=class_accuracy, los
     with torch.no_grad():
         for X, y in dataloader:
             X = X.to(device)
-            #y = y.to(device)
             y0, y1= (
             y[0].to(device),
             y[1].to(device),
@@ -310,7 +309,5 @@ if __name__ == "__main__":
     path = F"{model_save_name}" 
     torch.save(model.state_dict(), path)
     
-    #model = Yolo(3, 6//2, 2)
-    #model.load_state_dict(torch.load('model.pt'))
-    #test_model(model, test_loader, scaled_anchors, performance=class_accuracy, loss_fn= Loss(), device='cuda:0')
+    
     

@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     model = Yolo()
 
-    print("here")
+    
 
     cap = cv.VideoCapture('tg.mp4')
     

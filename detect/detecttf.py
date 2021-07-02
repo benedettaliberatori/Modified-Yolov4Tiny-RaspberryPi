@@ -6,7 +6,7 @@ from torchvision import transforms
 from utils import cells_to_bboxes, non_max_suppression
 
 if __name__ == '__main__':
-    print("Started")
+    
 
     ANCHORS = [[(0.275,   0.320312), (0.068, 0.113281), (0.017,  0.03)],
                [(0.03,   0.056), (0.01,   0.018), (0.006,   0.01)]]
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     cap = cv.VideoCapture(0)
     
     if not cap.isOpened():
-        print("cannot open camera")
+        print("Cannot open camera")
         exit()
     
     start = time.perf_counter()
@@ -101,8 +101,6 @@ if __name__ == '__main__':
             cv.destroyAllWindows()
             break
     
-    #plt.plot(history_fps)
-    #plt.ylabel("FPS")
-    #plt.show()
+    
     end = time.perf_counter()
     print(count/(end-start))
