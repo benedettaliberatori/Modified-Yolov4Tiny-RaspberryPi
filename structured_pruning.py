@@ -27,11 +27,7 @@ def prune_model(model):
     for m in model.modules():
         if isinstance( m, ConvBlock ):
             prune_conv( m.conv, 0.5)
-        #if isinstance( m, ResBlockD):
-        #    prune_conv(m.conv1, 0.3)
-        #    prune_conv(m.conv2, 0.3)
-        #    prune_conv(m.conv3, 0.3)
-        #    prune_conv(m.conv4, 0.3)
+        
         
             
     return model   
@@ -67,7 +63,7 @@ if __name__ == '__main__':
 
 
     optimizer = RAdam(model.parameters(), lr=0.001/5, weight_decay=0.005)
-    num_epochs = 100
+    num_epochs = 50
     scaler = torch.cuda.amp.GradScaler()
     train_model(train_loader, model, optimizer, Loss(), num_epochs, scaler,  scaled_anchors,None, performance=class_accuracy,lr_scheduler= None,epoch_start_scheduler= 40)
 
@@ -84,7 +80,7 @@ if __name__ == '__main__':
     model = onnx.load("onnx_model.onnx")
 
     tf_rep = prepare(model)
-    tf_rep.export_graph('modeldb_tf')
+    tf_rep.export_graph('modeld50_tf')
 
     #converter = tf.lite.TFLiteConverter.from_saved_model('model_tf')
     #tflite_model = converter.convert()
