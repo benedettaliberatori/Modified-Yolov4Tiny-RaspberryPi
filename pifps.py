@@ -9,7 +9,7 @@ warnings.filterwarnings("ignore")
 
 def test_model(dataloader):
 
-    interpreter = tf.lite.Interpreter('downblur.tflite')
+    interpreter = tf.lite.Interpreter('pruneddb.tflite')
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()
@@ -44,4 +44,4 @@ if __name__ == "__main__":
 
     test_loader = get_data('transform.csv')
 
-    test_model(test_loader, device=None)
+    test_model(test_loader)
