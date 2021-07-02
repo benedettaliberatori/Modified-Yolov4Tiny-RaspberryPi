@@ -1,5 +1,8 @@
+import sys 
+sys.path.append("..")
+import os
 import torch
-from utils.pidataset import get_data
+from dataset.pidataset import get_data
 import warnings
 import time
 import tensorflow as tf
@@ -8,8 +11,10 @@ warnings.filterwarnings("ignore")
 
 
 def test_model(dataloader):
-
-    interpreter = tf.lite.Interpreter('pruneddb.tflite')
+    '''
+    You need to call this function inside the OD directory
+    '''
+    interpreter = tf.lite.Interpreter('models/pruneddb.tflite')
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()
@@ -17,7 +22,7 @@ def test_model(dataloader):
     i = 0
     with torch.no_grad():
         for X, _ in dataloader:
-            print(i)
+            #print(i)
             i+=1
             
        
@@ -33,15 +38,11 @@ def test_model(dataloader):
             end = time.perf_counter()
             t += (end-start)
         
-            
-
     print(100/(t))
-
-
-
+    
 
 if __name__ == "__main__":
-
     test_loader = get_data('transform.csv')
 
+    os.chdir("..")
     test_model(test_loader)

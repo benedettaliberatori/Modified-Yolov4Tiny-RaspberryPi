@@ -1,9 +1,12 @@
+import sys 
+sys.path.append("..")
+import os
 import torch
 import torch.optim as optim
 from yolo.yolo import Yolo
 from utils.loss import Loss
 from utils.utils import  AverageMeter,class_accuracy, use_gpu_if_possible
-from utils.dataset import get_data
+from dataset.dataset import get_data
 import warnings
 import time
 import sys
@@ -139,7 +142,6 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaler,  scaled_anchors
             y[0].to(device),
             y[1].to(device),
         )
-
         
         
         for param in model.parameters():
@@ -159,7 +161,7 @@ def train_epoch(train_loader, model, optimizer, loss_fn, scaler,  scaled_anchors
         scaler.update()
         
 
-        acc1 , acc2 , acc3 = performance(out,model, y,device)
+        acc1 , acc2 , acc3 = performance(out, model, y, device)
         
         loss_meter.update(val=loss.item(), n=x.shape[0])
 
@@ -268,8 +270,6 @@ if __name__ == "__main__":
 
     num_anchor = 6
     model = Yolo(3, num_anchor //2, 2)
-
-    torch.save(model.state_dict(), 'untrained.pt') 
     
     optimizer_SGD = optim.SGD(
         model.parameters(), lr=0.001, weight_decay=0.0005
@@ -278,28 +278,26 @@ if __name__ == "__main__":
     loss_fn = Loss()
     S=[13, 26]
     num_epochs = 100
-#
+
     ANCHORS = [[(0.276  , 0.320312), (0.068  ,  0.113281), (0.03   ,  0.056    )], [(0.017 ,   0.03  ), (0.01 ,  0.018  ), (0.006  , 0.01 )]]
-#
-    train_loader, test_loader = get_data('train.csv','test.csv')
-#
+
+    os.chdir("..")
+    train_loader, test_loader = get_data('dataset/train.csv','dataset/test.csv')
+    
     scaled_anchors = (
         torch.tensor(ANCHORS)
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
-    ).to("cuda:0")
-#   
-
-
+    ).to("cpu")   
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer_SGD, step_size=20, gamma=1.1)
     if str(sys.argv[-1]) == "SGD":
         optimizer = optimizer_SGD
-        model_save_name = 'model_SGD.pt'
+        model_save_name = '../models/model_SGD.pt'
         scheduler = scheduler
     
     if str(sys.argv[-1]) == "RADAM":
         optimizer = optimizer_RAdam
-        model_save_name = 'model_RAdam.pt'
+        model_save_name = '../models/model_RAdam.pt'
         scheduler = None
 
     scaler = torch.cuda.amp.GradScaler()
@@ -308,6 +306,3 @@ if __name__ == "__main__":
     
     path = F"{model_save_name}" 
     torch.save(model.state_dict(), path)
-    
-    
-    

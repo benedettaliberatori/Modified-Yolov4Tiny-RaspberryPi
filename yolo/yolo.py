@@ -1,5 +1,8 @@
-from backbone import backbone
-from CSP import ConvBlock
+import sys 
+sys.path.append("..")
+
+from yolo.backbone import backbone
+from yolo.CSP import ConvBlock
 
 import torch.nn as nn
 import torch

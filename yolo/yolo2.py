@@ -1,6 +1,9 @@
-from utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
-from backbone import backbone
-from CSP import ConvBlock
+import sys 
+sys.path.append("..")
+import os
+from utils.utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
+from yolo.backbone import backbone
+from yolo.CSP import ConvBlock
 import torch.nn as nn
 import torch
 from torchvision import transforms
@@ -44,8 +47,9 @@ class Yolo(object):
     
     def generate(self):
         self.net=Yolo_Block(3,3,2).eval()
-        
-        model_dict=torch.load("downblur.pt", map_location = use_gpu_if_possible())
+        os.chdir("..")
+
+        model_dict=torch.load("models/downblur.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
         #self.net= torch.load("pruned_untrained.pt")
         
@@ -89,22 +93,22 @@ class Yolo(object):
             return CV2_frame           
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
      
-    ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
-           [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]  
-    S = [13,26]   
-    scaled_anchors = torch.tensor(ANCHORS) / (
-        1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
+#     ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
+#            [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]  
+#     S = [13,26]   
+#     scaled_anchors = torch.tensor(ANCHORS) / (
+#         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
         
-    model = Yolo()
+#     model = Yolo()
     
-    image = cv2.imread("arianna.jpg", cv2.IMREAD_UNCHANGED)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    image_tensor = transforms.ToTensor()(image).unsqueeze_(0)
+#     image = cv2.imread("arianna.jpg", cv2.IMREAD_UNCHANGED)
+#     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+#     image_tensor = transforms.ToTensor()(image).unsqueeze_(0)
     
-    image = model.detect_Persson(image,image_tensor,scaled_anchors)
+#     image = model.detect_Persson(image,image_tensor,scaled_anchors)
     
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    cv2.imwrite("new_arianna.jpg", image)
+#     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+#     cv2.imwrite("new_arianna.jpg", image)
     

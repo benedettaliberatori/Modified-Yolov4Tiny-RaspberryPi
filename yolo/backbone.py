@@ -1,4 +1,4 @@
-from CSP import AuxiliaryResBlock,ResBlockD,CSPBlock,ConvBlock
+from yolo.CSP import AuxiliaryResBlock,ResBlockD,CSPBlock,ConvBlock
 import torch.nn as nn
 import torch
 

@@ -1,9 +1,13 @@
+import sys 
+sys.path.append("..")
+
+import os
 import cv2 as cv
 import time
 import tensorflow as tf
 import torch
 from torchvision import transforms
-from utils import cells_to_bboxes, non_max_suppression
+from utils.utils import cells_to_bboxes, non_max_suppression
 
 if __name__ == '__main__':
     
@@ -14,7 +18,9 @@ if __name__ == '__main__':
     scaled_anchors = torch.tensor(ANCHORS) / (
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
 
-    interpreter = tf.lite.Interpreter('pruneddb.tflite')
+    os.chdir("..")
+
+    interpreter = tf.lite.Interpreter('models/pruneddb.tflite')
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()

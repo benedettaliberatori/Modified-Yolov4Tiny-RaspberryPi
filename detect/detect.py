@@ -1,3 +1,6 @@
+import sys 
+sys.path.append("..")
+
 import cv2 as cv
 from yolo.yolo2 import Yolo
 import torch
@@ -17,7 +20,7 @@ if __name__ == "__main__":
 
     
 
-    cap = cv.VideoCapture('tg.mp4')
+    cap = cv.VideoCapture(0)
     
     if not cap.isOpened():
         print("cannot open camera")
