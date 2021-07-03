@@ -36,7 +36,6 @@ if __name__ == "__main__":
         pred_boxes,
         true_boxes,
         iou_threshold=0.5,
-        box_format="midpoint",
         num_classes=2,
     )
 

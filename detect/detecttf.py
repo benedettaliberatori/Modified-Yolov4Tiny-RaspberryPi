@@ -63,7 +63,7 @@ if __name__ == '__main__':
                 boxes += cells_to_bboxes(out[i], S=out[i].shape[2], anchors = anchor)[0]
                 
             
-        boxes = non_max_suppression(boxes, iou_threshold= .1, threshold=.65, box_format = "midpoint")
+        boxes = non_max_suppression(boxes, iou_threshold= .1, threshold=.65)
         
         for box in boxes:
 

@@ -78,7 +78,7 @@ class Yolo(object):
                 anchor = scaled_anchors[i]
                 boxes += cells_to_bboxes(out[i], S=out[i].shape[2], anchors = anchor)[0]
                 
-            boxes = non_max_suppression(boxes, iou_threshold= iou_thresh, threshold=tresh, box_format = "midpoint")
+            boxes = non_max_suppression(boxes, iou_threshold= iou_thresh, threshold=tresh)
             
 
             for box in boxes:
