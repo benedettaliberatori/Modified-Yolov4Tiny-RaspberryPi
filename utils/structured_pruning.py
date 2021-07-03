@@ -3,8 +3,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 #sys.path.append("..")
 
 import torch
-#import torch_pruning as tp
-#sys.path.insert(0, str(pathlib.Path(__file__).parent))
+import torch_pruning as tp
 from yolo.yolo2 import Yolo_Block
 
 
