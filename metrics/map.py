@@ -1,6 +1,6 @@
 import sys 
-sys.path.append("..")
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 from yolo.yolo2 import Yolo_Block
 from utils.utils import  mean_average_precision,get_evaluation_bboxes, use_gpu_if_possible
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     [(0.28, 0.22), (0.38, 0.48), (0.9, 0.78)],
     [(0.07, 0.15), (0.15, 0.11), (0.14, 0.29)]]
     
-    os.chdir("..")
+
 
     train_loader, test_loader = get_data('dataset/train.csv','dataset/test.csv')
 
