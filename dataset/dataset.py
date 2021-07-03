@@ -1,6 +1,4 @@
 import sys 
-sys.path.append("..")
-
 import numpy as np
 import os
 import pandas as pd
@@ -8,7 +6,7 @@ import torch
 
 from PIL import ImageFile
 from torch.utils.data import Dataset, DataLoader
-from utils import iou_width_height 
+from utils.utils import iou_width_height 
 
 import albumentations as A
 import cv2

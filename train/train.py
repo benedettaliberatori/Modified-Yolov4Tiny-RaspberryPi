@@ -1,12 +1,13 @@
 import sys 
-sys.path.append("..")
+#sys.path.append("..")
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 import torch.optim as optim
 from yolo.yolo import Yolo
-os.chdir("../utils")
-from loss import Loss
-from utils import  AverageMeter,class_accuracy, use_gpu_if_possible
+
+from utils.loss import Loss
+from utils.utils import  AverageMeter,class_accuracy, use_gpu_if_possible
 from dataset.dataset import get_data
 import warnings
 import time
@@ -282,7 +283,7 @@ if __name__ == "__main__":
 
     ANCHORS = [[(0.276  , 0.320312), (0.068  ,  0.113281), (0.03   ,  0.056    )], [(0.017 ,   0.03  ), (0.01 ,  0.018  ), (0.006  , 0.01 )]]
 
-    os.chdir("..")
+    
     train_loader, test_loader = get_data('dataset/train.csv','dataset/test.csv')
     
     scaled_anchors = (

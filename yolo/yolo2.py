@@ -1,7 +1,7 @@
 import sys 
 sys.path.append("..")
 import os
-os.chdir("../utils")
+
 from utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
 sys.path.append("..")
 from yolo.backbone import backbone
