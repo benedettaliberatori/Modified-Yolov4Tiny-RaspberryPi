@@ -49,28 +49,27 @@ class CustomYoloDataset(Dataset):
             image = augmentations["image"]
             bboxes = augmentations["bboxes"]
 
-        # Building the targets below:
-        
-        targets = [torch.zeros((self.num_anchors // 2, S, S, 6))
-                   for S in self.S]
+        # 2 targets (from groundtruth) to be compared with the 2 outputs of the model
+        targets = [torch.zeros((self.num_anchors // 2, S, S, 6)) for S in self.S]
+
         for box in bboxes:
             iou_anchors = iou_width_height(torch.tensor(box[2:4]), self.anchors)
             anchor_indices = iou_anchors.argsort(descending=True, dim=0)
             x, y, width, height, class_label = box
-            has_anchor = [False] * 3  # each scale should have one anchor
+            has_anchor = [False] * 3  
             for anchor_idx in anchor_indices:
                 scale_idx = anchor_idx // self.num_anchors_per_scale
                 anchor_on_scale = anchor_idx % self.num_anchors_per_scale
                 S = self.S[scale_idx]
-                i, j = int(S * y), int(S * x)  # which cell
+                i, j = int(S * y), int(S * x)  
                 anchor_taken = targets[scale_idx][anchor_on_scale, i, j, 0]
                 if not anchor_taken and not has_anchor[scale_idx]:
                     targets[scale_idx][anchor_on_scale, i, j, 0] = 1
-                    x_cell, y_cell = S * x - j, S * y - i  # both between [0,1]
+                    x_cell, y_cell = S * x - j, S * y - i  
                     width_cell, height_cell = (
                         width * S,
                         height * S,
-                    )  # can be greater than 1 since it's relative to cell
+                    )  
                     box_coordinates = torch.tensor(
                         [x_cell, y_cell, width_cell, height_cell]
                     )
@@ -81,8 +80,7 @@ class CustomYoloDataset(Dataset):
                     has_anchor[scale_idx] = True
 
                 elif not anchor_taken and iou_anchors[anchor_idx] > self.ignore_iou_thresh:
-                    targets[scale_idx][anchor_on_scale,
-                                       i, j, 0] = -1  # ignore prediction
+                    targets[scale_idx][anchor_on_scale,i, j, 0] = -1  
 
         return image, tuple(targets)
 
