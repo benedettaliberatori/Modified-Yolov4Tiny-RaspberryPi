@@ -1,6 +1,6 @@
 import sys 
 import os
-sys.path.append("..")
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
 from yolo.yolo import Yolo
@@ -56,13 +56,12 @@ if __name__ == "__main__":
     num_anchor = 6
     model = Yolo(3, num_anchor //2, 2)
 
-    os.chdir("..")
 
     model.load_state_dict(torch.load("models/downblur.pt", use_gpu_if_possible())) 
     loss_fn = Loss()
     S=[13, 26]
   
-
+    
     ANCHORS = [[(0.276  , 0.320312), (0.068  ,  0.113281), (0.03   ,  0.056    )], [(0.017 ,   0.03  ), (0.01 ,  0.018  ), (0.006  , 0.01 )]]
 
     train_loader, test_loader = get_data('dataset/train.csv','dataset/test.csv')

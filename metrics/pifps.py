@@ -1,6 +1,6 @@
 import sys 
-sys.path.append("..")
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 from dataset.pidataset import get_data
 import warnings
@@ -42,7 +42,6 @@ def test_model(dataloader):
     
 
 if __name__ == "__main__":
-    test_loader = get_data('transform.csv')
+    test_loader = get_data('metrics/transform.csv')
 
-    os.chdir("..")
     test_model(test_loader)

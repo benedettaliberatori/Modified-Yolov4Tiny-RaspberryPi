@@ -1,7 +1,6 @@
 import sys 
-sys.path.append("..")
-
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import cv2 as cv
 import time
 import tensorflow as tf
@@ -18,7 +17,6 @@ if __name__ == '__main__':
     scaled_anchors = torch.tensor(ANCHORS) / (
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
 
-    os.chdir("..")
 
     interpreter = tf.lite.Interpreter('models/pruneddb.tflite')
     interpreter.allocate_tensors()
