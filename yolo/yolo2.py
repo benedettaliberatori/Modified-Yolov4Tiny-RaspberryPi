@@ -55,16 +55,16 @@ class Yolo(object):
 
     def detect(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .1, tresh = .65 ):
         """
-        Used to get predictions from camera stream.
+        Used to get predictions from camera stream. 
+        Returns a 416x416 image in RGB.
 
-        Parameters:
+        INPUTS:
             CV2_frame, RGB 416x416 image read from camera 
             Tensor_frame, image in tensor format
             scaled_anchors, anchor boxes rescaled 
             iou_thresh =  Intersection Over Union threshold
             tresh = threshold to filter boxes w/ smaller objectness score
-        Returns:
-            A 416x416 image in RGB
+        
 
         """
                        
