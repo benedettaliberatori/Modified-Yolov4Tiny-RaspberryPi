@@ -1,13 +1,12 @@
 import sys 
-#sys.path.append("..")
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 import torch.optim as optim
 from yolo.yolo import Yolo
 
-from utils.loss import Loss
-from utils.utils import  AverageMeter,class_accuracy, use_gpu_if_possible
+from utilities.loss import Loss
+from utilities.utils import  AverageMeter,class_accuracy, use_gpu_if_possible
 from dataset.dataset import get_data
 import warnings
 import time

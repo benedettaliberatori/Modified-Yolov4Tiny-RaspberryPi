@@ -1,24 +1,15 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-#sys.path.append("..")
-
 import torch
 import torch_pruning as tp
 from yolo.yolo2 import Yolo_Block
-
-
-
-
-
-
 from train.train import train_model, RAdam , test_model
-from yolo.CSP import ConvBlock, ResBlockD
+from yolo.CSP import ConvBlock
 import numpy as np
 
 from loss import Loss
 
 from utils import class_accuracy
-sys.path.append("..")
 from dataset.dataset import get_data
 import onnx 
 from onnx_tf.backend import prepare

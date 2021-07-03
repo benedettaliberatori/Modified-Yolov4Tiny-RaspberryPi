@@ -1,8 +1,7 @@
 import sys 
-
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
+from utilities.utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
 from yolo.backbone import backbone
 from yolo.CSP import ConvBlock
 import torch.nn as nn
