@@ -1,9 +1,8 @@
 import sys 
-sys.path.append("..")
-import os
 
-from utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
-sys.path.append("..")
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
 from yolo.backbone import backbone
 from yolo.CSP import ConvBlock
 import torch.nn as nn
@@ -49,11 +48,9 @@ class Yolo(object):
     
     def generate(self):
         self.net=Yolo_Block(3,3,2).eval()
-        os.chdir("..")
 
-        model_dict=torch.load("models/downblur.pt", map_location = use_gpu_if_possible())
+        model_dict=torch.load("./models/downblur.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
-        #self.net= torch.load("pruned_untrained.pt")
         
 
     def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .1, tresh = .65 ):
@@ -66,8 +63,6 @@ class Yolo(object):
             
             for i in range(2):
                 anchor = scaled_anchors[i]
-                #print(anchor.shape)
-                #print(out[i].shape)
                 boxes += cells_to_bboxes(out[i], S=out[i].shape[2], anchors = anchor)[0]
                 
             boxes = non_max_suppression(boxes, iou_threshold= iou_thresh, threshold=tresh, box_format = "midpoint")
