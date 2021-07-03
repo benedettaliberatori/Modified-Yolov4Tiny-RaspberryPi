@@ -4,8 +4,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
 from yolo.yolo import Yolo
-from utils.loss import Loss
-from utils.utils import  AverageMeter, use_gpu_if_possible
+from utilities.loss import Loss
+from utilities.utils import  AverageMeter, use_gpu_if_possible
 from dataset.dataset import get_data
 import warnings
 import time

@@ -6,7 +6,7 @@ import time
 import tensorflow as tf
 import torch
 from torchvision import transforms
-from utils.utils import cells_to_bboxes, non_max_suppression
+from utilities.utils import cells_to_bboxes, non_max_suppression
 
 if __name__ == '__main__':
     

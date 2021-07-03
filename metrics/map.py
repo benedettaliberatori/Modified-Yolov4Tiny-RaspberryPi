@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
 from yolo.yolo2 import Yolo_Block
-from utils.utils import  mean_average_precision,get_evaluation_bboxes, use_gpu_if_possible
+from utilities.utils import  mean_average_precision,get_evaluation_bboxes, use_gpu_if_possible
 from dataset.dataset import get_data
 import warnings
 

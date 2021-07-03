@@ -6,6 +6,7 @@ import torch
 
 from PIL import ImageFile
 from torch.utils.data import Dataset, DataLoader
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utilities.utils import iou_width_height 
 
 import albumentations as A

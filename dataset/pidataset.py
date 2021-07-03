@@ -1,6 +1,4 @@
 import sys 
-sys.path.append("..")
-
 import numpy as np
 import os
 import pandas as pd
@@ -8,7 +6,8 @@ import torch
 import tensorflow as tf
 from PIL import Image, ImageFile
 from torch.utils.data import Dataset, DataLoader
-from utils.utils import iou_width_height 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utilities.utils import iou_width_height 
 
 import albumentations as A
 import cv2
