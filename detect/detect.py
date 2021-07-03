@@ -1,7 +1,6 @@
 import sys 
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import cv2 as cv
 from yolo.yolo2 import Yolo
 import torch
@@ -24,7 +23,7 @@ if __name__ == "__main__":
     cap = cv.VideoCapture(0)
     
     if not cap.isOpened():
-        print("cannot open camera")
+        print("Cannot open camera")
         exit()
     
     start = time.perf_counter()
@@ -46,7 +45,7 @@ if __name__ == "__main__":
         frame_tensor = transforms.ToTensor()(frame).unsqueeze_(0)
         
          
-        frame = model.detect_Persson(frame, frame_tensor, scaled_anchors)
+        frame = model.detect(frame, frame_tensor, scaled_anchors)
         frame = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
         count += 1
         fps = 1/(new_frame_time-prev_frame_time)

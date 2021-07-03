@@ -1,12 +1,10 @@
-import sys 
-import os
+import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utilities.utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
 from yolo.backbone import backbone
 from yolo.CSP import ConvBlock
 import torch.nn as nn
 import torch
-from torchvision import transforms
 import cv2
 
 
@@ -26,7 +24,7 @@ class Yolo_Block(nn.Module):
         self.conv5 = nn.Conv2d(512,255,1,1)
         self.head = nn.Conv2d(255,B*(5+num_classes),1,1)
         self.B = B
-        #self.generate()
+        
 
     def forward(self,x):
         out1 , out2 = self.back(x)
@@ -46,13 +44,29 @@ class Yolo(object):
         self.generate()
     
     def generate(self):
+        """
+        Loads a pre-trained pytorch model and
+        sets it to evaluation mode. 
+        """
         self.net=Yolo_Block(3,3,2).eval()
-
         model_dict=torch.load("./models/downblur.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
         
 
-    def detect_Persson(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .1, tresh = .65 ):
+    def detect(self, CV2_frame,Tensor_frame, scaled_anchors, iou_thresh = .1, tresh = .65 ):
+        """
+        Used to get predictions from camera stream.
+
+        Parameters:
+            CV2_frame, RGB 416x416 image read from camera 
+            Tensor_frame, image in tensor format
+            scaled_anchors, anchor boxes rescaled 
+            iou_thresh =  Intersection Over Union threshold
+            tresh = threshold to filter boxes w/ smaller objectness score
+        Returns:
+            A 416x416 image in RGB
+
+        """
                        
         with torch.no_grad():
 
@@ -68,10 +82,10 @@ class Yolo(object):
             
 
             for box in boxes:
-                if box[0] == 0: # mask
+                if box[0] == 0: 
                         color = (0,250,154)
                         label = 'mask'
-                else: # no mask
+                else: 
                         color = (255, 0, 0)
                         label = 'no mask'
                 height, width = 416, 416
@@ -81,30 +95,13 @@ class Yolo(object):
                 p0 = (int((box[0] - box[2]/2)*height) ,int((box[1] - box[3]/2)*width))
                 p1 = (int((box[0] + box[2]/2)*height) ,int((box[1] + box[3]/2)*width))
                 
-                #print(p0)
-                #print(p1)
+                
                 
                 CV2_frame = cv2.rectangle(CV2_frame, p0, p1, color, thickness=2)
-                cv2.putText(CV2_frame, label + "{:.2f}".format(p*100) + '%', (int((box[0] - box[2]/2)*height), int((box[1] - box[3]/2)*width)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+                cv2.putText(CV2_frame, label + "{:.2f}".format(p*100) + '%', (int((box[0] - box[2]/2)*height), 
+                            int((box[1] - box[3]/2)*width)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
             return CV2_frame           
 
 
-# if __name__ == '__main__':
-     
-#     ANCHORS =  [[(0.275 ,   0.320312), (0.068   , 0.113281), (0.017  ,  0.03   )], 
-#            [(0.03  ,   0.056   ), (0.01  ,   0.018   ), (0.006 ,   0.01    )]]  
-#     S = [13,26]   
-#     scaled_anchors = torch.tensor(ANCHORS) / (
-#         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
-        
-#     model = Yolo()
-    
-#     image = cv2.imread("arianna.jpg", cv2.IMREAD_UNCHANGED)
-#     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-#     image_tensor = transforms.ToTensor()(image).unsqueeze_(0)
-    
-#     image = model.detect_Persson(image,image_tensor,scaled_anchors)
-    
-#     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-#     cv2.imwrite("new_arianna.jpg", image)
+
     
