@@ -69,6 +69,6 @@ if __name__ == "__main__":
     scaled_anchors = (
         torch.tensor(ANCHORS)
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
-    ).to("cpu")
+    ).to("cuda:0")
 
     test_model(model, test_loader, scaled_anchors , loss_fn=loss_fn, device=None)
