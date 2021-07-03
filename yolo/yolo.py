@@ -1,5 +1,6 @@
 import sys 
-sys.path.append("..")
+import os 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from yolo.backbone import backbone
 from yolo.CSP import ConvBlock
