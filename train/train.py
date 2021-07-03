@@ -289,7 +289,7 @@ if __name__ == "__main__":
     scaled_anchors = (
         torch.tensor(ANCHORS)
         * torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
-    ).to("cpu")   
+    ).to("cuda:0")   
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer_SGD, step_size=20, gamma=1.1)
     if str(sys.argv[-1]) == "SGD":
