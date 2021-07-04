@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch
-
+from matplotlib import pyplot as plt
 
 class ConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1):
@@ -117,18 +117,15 @@ class AuxiliaryResBlock(nn.Module):
         x = x * self.channel_attention(x)
         x = x * self.spatial_attention(x)
         out = torch.cat([x,feat],dim=1)
+        
+
         return out
 
 
     
 
 
-if __name__ == '__main__':
-    x = torch.rand(1,128,104,104)
-    
-    
-    model3 = AuxiliaryResBlock(128)
-    print(model3(x).shape)
+
 
 
 

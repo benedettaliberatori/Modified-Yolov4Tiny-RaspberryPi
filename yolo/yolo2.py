@@ -1,4 +1,5 @@
 import sys, os
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utilities.utils import cells_to_bboxes, non_max_suppression, use_gpu_if_possible
 from yolo.backbone import backbone
@@ -49,7 +50,7 @@ class Yolo(object):
         sets it to evaluation mode. 
         """
         self.net=Yolo_Block(3,3,2).eval()
-        model_dict=torch.load("./models/downblur.pt", map_location = use_gpu_if_possible())
+        model_dict=torch.load("./models/model.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
         
 
@@ -104,4 +105,4 @@ class Yolo(object):
 
 
 
-    
+

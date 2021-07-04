@@ -17,8 +17,11 @@ if __name__ == '__main__':
     scaled_anchors = torch.tensor(ANCHORS) / (
         1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
 
+    if str(sys.argv[-1]) == "model":
+        interpreter = tf.lite.Interpreter('models/model.tflite')
+    if str(sys.argv[-1]) == "pmodel":
+        interpreter = tf.lite.Interpreter('models/pmodel.tflite')
 
-    interpreter = tf.lite.Interpreter('models/pruneddb.tflite')
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details= interpreter.get_output_details()

@@ -2,8 +2,8 @@ import sys
 import os 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from yolo.backbone import backbone
-from yolo.CSP import ConvBlock
+from backbone import backbone
+from CSP import ConvBlock
 
 import torch.nn as nn
 import torch
@@ -47,11 +47,9 @@ if __name__ == '__main__':
     
     x = torch.rand(1,3,416,416)
     model = Yolo(3,3,2)
-    model.detect(x)
-    #odel = Yolo(3,20,5)
-    #out1,out2 = model(x)
-
-    #print('out1 :',out1.shape,'out2:',out2.shape)
+    #model.detect(x)
+    y = model(x)
+    
 
 
         
