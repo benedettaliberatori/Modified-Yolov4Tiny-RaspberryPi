@@ -36,7 +36,7 @@ ValueError: Expected x_max for bbox (0.98828125, 0.20502645502645503, 1.00097656
 
 ```
 
-This seems to be a regular problem with the albumentation data augmentation package. In the absence of a real solution and noticing that the error raised from very small values (~ $10^{-4}$) we have brutally get around the problem modifying the `check_bbox` function rounding values exceeding the margins to 0 or 1. 
+This seems to be a regular problem with the albumentation data augmentation package. In the absence of a real solution and noticing that the error raised from very small values (~10-4) we have brutally get around the problem modifying the `check_bbox` function rounding values exceeding the margins to 0 or 1. 
 
 
 
