@@ -14,6 +14,12 @@ The directory [utilities](https://github.com/benedettaliberatori/Modified-Yolov4
 
 The directory [metrics](https://github.com/benedettaliberatori/Modified-Yolov4Tiny-RaspberryPi/tree/main/metrics) contains the scripts used to compute the FPSs and MAPs.
 
+## Requirements
+
+In addition to the libraries in `requirements.txt`, the following libraries are required, whose installation is system-dependent:
+* PyTorch: see [this page](https://pytorch.org/get-started/locally/)
+* TFLite: see [this page](https://www.tensorflow.org/lite/guide/python)
+
 ## Usage
 
 Run  
