@@ -50,7 +50,7 @@ class Yolo(object):
         sets it to evaluation mode. 
         """
         self.net=Yolo_Block(3,3,2).eval()
-        model_dict=torch.load("./models/model.pt", map_location = use_gpu_if_possible())
+        model_dict=torch.load("../models/model.pt", map_location = use_gpu_if_possible())
         self.net.load_state_dict(model_dict)
         
 
@@ -84,11 +84,13 @@ class Yolo(object):
 
             for box in boxes:
                 if box[0] == 0: 
-                        color = (0,250,154)
-                        label = 'mask'
+                        #color = (0,250,154)
+                        color = (0, 100, 0)
+                        label = 'MASK'
                 else: 
-                        color = (255, 0, 0)
-                        label = 'no mask'
+                        #color = (255, 0, 0)
+                        color = (139, 0,0)
+                        label = 'NO MASK'
                 height, width = 416, 416
 
                 p = box[1]
@@ -99,8 +101,18 @@ class Yolo(object):
                 
                 
                 CV2_frame = cv2.rectangle(CV2_frame, p0, p1, color, thickness=2)
-                cv2.putText(CV2_frame, label + "{:.2f}".format(p*100) + '%', (int((box[0] - box[2]/2)*height), 
-                            int((box[1] - box[3]/2)*width)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+                #cv2.putText(CV2_frame, label + "{:.2f}".format(p*100) + '%', (int((box[0] - box[2]/2)*height), 
+                            #int((box[1] - box[3]/2)*width)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+
+                #cv2.putText(CV2_frame, label , (int((box[0] - box[2]/2)*height), 
+                #            int((box[1] - box[3]/2)*width)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+
+                w, h = cv2.getTextSize(label, 0, fontScale=2 / 3, thickness=1)[0]
+                p1 = p0[0] + w, p0[1] + h + 3
+
+                cv2.rectangle(CV2_frame, p0, p1, color, -1, cv2.LINE_AA)  # filled
+                cv2.putText(CV2_frame, label, ( p0[0], p0[1] + h + 2), 0, 2 / 3, (255, 255, 255),
+                            thickness=1, lineType=cv2.LINE_AA)
             return CV2_frame           
 
 
