@@ -139,3 +139,8 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+dataset_extra/fairface_dataset/train/*
+dataset_extra/fairface_dataset/test/*
+dataset_extra/test_set_select/*
+dataset_extra/test_set_batchII/*
