@@ -51,4 +51,19 @@ ValueError: Expected x_max for bbox (0.98828125, 0.20502645502645503, 1.00097656
 This seems to be a regular problem with the albumentation data augmentation package. In the absence of a real solution and noticing that the error raised from very small values (~10e:-4) we have brutally get around the problem modifying the `check_bbox` function rounding values exceeding the margins to 0 or 1. 
 
 
+## Extra analysis
 
+An additional analysis can be performed. Three different dataset are used and they must be added in the [dataset_extra](https://github.com/benedettaliberatori/Modified-Yolov4Tiny-RaspberryPi/tree/main/dataset_extra) folder. The images of the datasets will be placed in subfolders whose full path will be:
+
+* dataset_extra/test_set_select
+* dataset_extra/test_set_batchII
+* dataset_extra/fairface_dataset/train
+* dataset_extra/fairface_dataset/test
+
+Once the datasets have been downloaded and correctly stored, the analysis can be perfomed via
+
+```bash
+python extra_analysis.py
+```
+
+and the results will be stored in the [results](https://github.com/benedettaliberatori/Modified-Yolov4Tiny-RaspberryPi/tree/main/dataset_extra/results) folder
